@@ -1,0 +1,21 @@
+model Result {
+  id         String  @id @default(uuid())
+  marks      Float
+  totalMarks Float // Out of 100 or 50
+  grade      String? // "A+", "B" (Calculated in backend)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id])
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id])
+
+  // Security: Result locked naki published?
+  isPublished Boolean @default(false)
+
+  @@unique([studentId, examId, subjectId]) // Unique constraint
+  @@map("results")
+}

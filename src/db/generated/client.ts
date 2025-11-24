@@ -6,7 +6,7 @@
 /*
  * This file should be your main import to use Prisma. Through it you get access to all the models, enums, and input types.
  * If you're looking for something you can import in the client-side of your application, please refer to the `browser.ts` file instead.
- * 
+ *
  * 🟢 You can import this file directly.
  */
 
@@ -15,7 +15,7 @@ import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 globalThis['__dirname'] = path.dirname(fileURLToPath(import.meta.url))
 
-import * as runtime from "@prisma/client/runtime/library"
+import * as runtime from "@prisma/client/runtime/client"
 import * as $Enums from "./enums.ts"
 import * as $Class from "./internal/class.ts"
 import * as Prisma from "./internal/prismaNamespace.ts"
@@ -29,21 +29,86 @@ export * from "./enums.ts"
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more Attendances
+ * const attendances = await prisma.attendance.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
  */
-export const PrismaClient = $Class.getPrismaClientClass(__dirname)
+export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
-
-// file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node")
-path.join(process.cwd(), "src/db/generated/query_engine-windows.dll.node")
-
+/**
+ * Model Attendance
+ * 
+ */
+export type Attendance = Prisma.AttendanceModel
+/**
+ * Model Class
+ * 
+ */
+export type Class = Prisma.ClassModel
+/**
+ * Model Section
+ * 
+ */
+export type Section = Prisma.SectionModel
+/**
+ * Model Subject
+ * 
+ */
+export type Subject = Prisma.SubjectModel
+/**
+ * Model AcademicYear
+ * 
+ */
+export type AcademicYear = Prisma.AcademicYearModel
+/**
+ * Model Exam
+ * 
+ */
+export type Exam = Prisma.ExamModel
+/**
+ * Model Result
+ * 
+ */
+export type Result = Prisma.ResultModel
+/**
+ * Model NoticeBoard
+ * 
+ */
+export type NoticeBoard = Prisma.NoticeBoardModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model Routine
+ * 
+ */
+export type Routine = Prisma.RoutineModel
+/**
+ * Model Parent
+ * 
+ */
+export type Parent = Prisma.ParentModel
+/**
+ * Model Staff
+ * 
+ */
+export type Staff = Prisma.StaffModel
+/**
+ * Model Student
+ * 
+ */
+export type Student = Prisma.StudentModel
+/**
+ * Model Teacher
+ * 
+ */
+export type Teacher = Prisma.TeacherModel
 /**
  * Model User
  * 

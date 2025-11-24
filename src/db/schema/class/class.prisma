@@ -1,0 +1,19 @@
+model Class {
+  id   String @id @default(uuid())
+  name String // "Class 6", "Class 10"
+
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  // Class Teacher (Optional)
+  classTeacherId String?
+  classTeacher   Teacher? @relation(fields: [classTeacherId], references: [id])
+
+  // Relations
+  sections Section[]
+  students Student[]
+  subjects Subject[]
+  // feeStructures FeeStructure[] // Class wise fee alada hoy
+
+  @@map("classes")
+}

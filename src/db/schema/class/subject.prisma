@@ -1,0 +1,13 @@
+model Subject {
+  id   String  @id @default(uuid())
+  name String // "Mathematics"
+  code String? // "MATH101"
+
+  classId String
+  class   Class  @relation(fields: [classId], references: [id])
+
+  routines Routine[]
+  results  Result[]
+
+  @@map("subjects")
+}

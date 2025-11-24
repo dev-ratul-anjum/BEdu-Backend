@@ -8,5 +8,19 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Attendance.ts'
+export type * from './models/Class.ts'
+export type * from './models/Section.ts'
+export type * from './models/Subject.ts'
+export type * from './models/AcademicYear.ts'
+export type * from './models/Exam.ts'
+export type * from './models/Result.ts'
+export type * from './models/NoticeBoard.ts'
+export type * from './models/Notification.ts'
+export type * from './models/Routine.ts'
+export type * from './models/Parent.ts'
+export type * from './models/Staff.ts'
+export type * from './models/Student.ts'
+export type * from './models/Teacher.ts'
 export type * from './models/User.ts'
 export type * from './commonInputTypes.ts'

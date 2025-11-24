@@ -19,7 +19,7 @@ dist/
 .alchemy
 /.next/
 .vercel
-prisma/generated/
+**/generated/
 
 
 # deps

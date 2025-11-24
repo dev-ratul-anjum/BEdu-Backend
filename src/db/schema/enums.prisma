@@ -1,0 +1,20 @@
+enum Role {
+  admin
+  teacher
+  accountant
+  student
+  parent
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  LEAVE // Authorized Leave
+}

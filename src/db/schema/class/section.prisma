@@ -1,0 +1,12 @@
+model Section {
+  id   String @id @default(uuid())
+  name String // "Section A", "Morning Shift"
+
+  classId String
+  class   Class  @relation(fields: [classId], references: [id])
+
+  students Student[]
+  routines Routine[] // Section wise routine hoy
+
+  @@map("sections")
+}

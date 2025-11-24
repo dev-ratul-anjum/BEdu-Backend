@@ -24,31 +24,47 @@ export const Decimal = runtime.Decimal
 
 
 export const NullTypes = {
-  DbNull: runtime.objectEnumValues.classes.DbNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.DbNull),
-  JsonNull: runtime.objectEnumValues.classes.JsonNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.JsonNull),
-  AnyNull: runtime.objectEnumValues.classes.AnyNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.AnyNull),
+  DbNull: runtime.NullTypes.DbNull as (new (secret: never) => typeof runtime.DbNull),
+  JsonNull: runtime.NullTypes.JsonNull as (new (secret: never) => typeof runtime.JsonNull),
+  AnyNull: runtime.NullTypes.AnyNull as (new (secret: never) => typeof runtime.AnyNull),
 }
 /**
  * Helper for filtering JSON entries that have `null` on the database (empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const DbNull = runtime.objectEnumValues.instances.DbNull
+export const DbNull = runtime.DbNull
+
 /**
  * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const JsonNull = runtime.objectEnumValues.instances.JsonNull
+export const JsonNull = runtime.JsonNull
+
 /**
  * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const AnyNull = runtime.objectEnumValues.instances.AnyNull
+export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Attendance: 'Attendance',
+  Class: 'Class',
+  Section: 'Section',
+  Subject: 'Subject',
+  AcademicYear: 'AcademicYear',
+  Exam: 'Exam',
+  Result: 'Result',
+  NoticeBoard: 'NoticeBoard',
+  Notification: 'Notification',
+  Routine: 'Routine',
+  Parent: 'Parent',
+  Staff: 'Staff',
+  Student: 'Student',
+  Teacher: 'Teacher',
   User: 'User'
 } as const
 
@@ -58,23 +74,189 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
  * Enums
  */
 
-export const TransactionIsolationLevel = runtime.makeStrictEnum({
+export const TransactionIsolationLevel = {
   ReadUncommitted: 'ReadUncommitted',
   ReadCommitted: 'ReadCommitted',
   RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
-} as const)
+} as const
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const UserScalarFieldEnum = {
+export const AttendanceScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  checkIn: 'checkIn',
+  checkOut: 'checkOut',
+  status: 'status',
+  studentId: 'studentId',
+  remarks: 'remarks'
+} as const
+
+export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
+
+
+export const ClassScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  email: 'email',
-  passwordHash: 'passwordHash',
+  academicYearId: 'academicYearId',
+  classTeacherId: 'classTeacherId'
+} as const
+
+export type ClassScalarFieldEnum = (typeof ClassScalarFieldEnum)[keyof typeof ClassScalarFieldEnum]
+
+
+export const SectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  classId: 'classId'
+} as const
+
+export type SectionScalarFieldEnum = (typeof SectionScalarFieldEnum)[keyof typeof SectionScalarFieldEnum]
+
+
+export const SubjectScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  classId: 'classId'
+} as const
+
+export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
+
+
+export const AcademicYearScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isCurrent: 'isCurrent'
+} as const
+
+export type AcademicYearScalarFieldEnum = (typeof AcademicYearScalarFieldEnum)[keyof typeof AcademicYearScalarFieldEnum]
+
+
+export const ExamScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  academicYearId: 'academicYearId'
+} as const
+
+export type ExamScalarFieldEnum = (typeof ExamScalarFieldEnum)[keyof typeof ExamScalarFieldEnum]
+
+
+export const ResultScalarFieldEnum = {
+  id: 'id',
+  marks: 'marks',
+  totalMarks: 'totalMarks',
+  grade: 'grade',
+  studentId: 'studentId',
+  examId: 'examId',
+  subjectId: 'subjectId',
+  isPublished: 'isPublished'
+} as const
+
+export type ResultScalarFieldEnum = (typeof ResultScalarFieldEnum)[keyof typeof ResultScalarFieldEnum]
+
+
+export const NoticeBoardScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  targetRoles: 'targetRoles',
+  isArchived: 'isArchived',
+  postedAt: 'postedAt'
+} as const
+
+export type NoticeBoardScalarFieldEnum = (typeof NoticeBoardScalarFieldEnum)[keyof typeof NoticeBoardScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  message: 'message',
+  isRead: 'isRead',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  userId: 'userId'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const RoutineScalarFieldEnum = {
+  id: 'id',
+  day: 'day',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  sectionId: 'sectionId',
+  subjectId: 'subjectId',
+  teacherId: 'teacherId'
+} as const
+
+export type RoutineScalarFieldEnum = (typeof RoutineScalarFieldEnum)[keyof typeof RoutineScalarFieldEnum]
+
+
+export const ParentScalarFieldEnum = {
+  id: 'id',
+  fatherName: 'fatherName',
+  motherName: 'motherName',
+  phone: 'phone',
+  email: 'email',
+  userId: 'userId'
+} as const
+
+export type ParentScalarFieldEnum = (typeof ParentScalarFieldEnum)[keyof typeof ParentScalarFieldEnum]
+
+
+export const StaffScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  position: 'position',
+  phone: 'phone',
+  userId: 'userId'
+} as const
+
+export type StaffScalarFieldEnum = (typeof StaffScalarFieldEnum)[keyof typeof StaffScalarFieldEnum]
+
+
+export const StudentScalarFieldEnum = {
+  id: 'id',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  rollNo: 'rollNo',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  bloodGroup: 'bloodGroup',
+  address: 'address',
+  userId: 'userId',
+  classId: 'classId',
+  sectionId: 'sectionId',
+  parentId: 'parentId'
+} as const
+
+export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+export const TeacherScalarFieldEnum = {
+  id: 'id',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  phone: 'phone',
+  designation: 'designation',
+  joiningDate: 'joiningDate',
+  userId: 'userId'
+} as const
+
+export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeof TeacherScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -94,4 +276,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

@@ -1,0 +1,13 @@
+model Exam {
+  id        String   @id @default(uuid())
+  title     String // "Final Term 2024"
+  startDate DateTime
+  endDate   DateTime
+
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  results Result[]
+
+  @@map("exams")
+}

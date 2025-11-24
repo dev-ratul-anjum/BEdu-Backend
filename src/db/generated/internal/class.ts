@@ -11,65 +11,39 @@
  * Please import the `PrismaClient` class from the `client.ts` file instead.
  */
 
-import * as runtime from "@prisma/client/runtime/library"
+import * as runtime from "@prisma/client/runtime/client"
 import type * as Prisma from "./prismaNamespace.ts"
 
 
 const config: runtime.GetPrismaClientConfig = {
-  "generator": {
-    "name": "client",
-    "provider": {
-      "fromEnvVar": null,
-      "value": "prisma-client"
-    },
-    "output": {
-      "value": "D:\\1. Work\\BrightFutureSoft\\BEdu\\BEdu-Backend\\src\\db\\generated",
-      "fromEnvVar": null
-    },
-    "config": {
-      "engineType": "library"
-    },
-    "binaryTargets": [
-      {
-        "fromEnvVar": null,
-        "value": "windows",
-        "native": true
-      }
-    ],
-    "previewFeatures": [],
-    "sourceFilePath": "D:\\1. Work\\BrightFutureSoft\\BEdu\\BEdu-Backend\\src\\db\\schema\\schema.prisma",
-    "isCustomOutput": true
-  },
-  "relativePath": "../schema",
-  "clientVersion": "6.19.0",
-  "engineVersion": "2ba551f319ab1df4bc874a89965d8b3641056773",
-  "datasourceNames": [
-    "db"
-  ],
+  "previewFeatures": [],
+  "clientVersion": "7.0.0",
+  "engineVersion": "0c19ccc313cf9911a90d99d2ac2eb0280c76c513",
   "activeProvider": "postgresql",
-  "inlineDatasources": {
-    "db": {
-      "url": {
-        "fromEnvVar": "DATABASE_URL",
-        "value": null
-      }
-    }
-  },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id           String @id @default(uuid())\n  name         String\n  email        String @unique\n  passwordHash String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n\n  @@map(\"users\")\n}\n",
-  "inlineSchemaHash": "46100e1ee74c78cb2b5b98e53d7d974d847744682a98d122106183f55ac01d9f",
-  "copyEngine": true,
+  "inlineSchema": "model Attendance {\n  id       String           @id @default(uuid())\n  date     DateTime         @default(now()) // Only Date part matters\n  checkIn  DateTime? // Time part matters\n  checkOut DateTime?\n  status   AttendanceStatus\n\n  studentId String\n  student   Student @relation(fields: [studentId], references: [id])\n\n  remarks String? // \"Late due to rain\"\n\n  // Indexing is CRUCIAL here for speed\n  @@index([studentId, date])\n  @@map(\"attendances\")\n}\n\nmodel Class {\n  id   String @id @default(uuid())\n  name String // \"Class 6\", \"Class 10\"\n\n  academicYearId String\n  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])\n\n  // Class Teacher (Optional)\n  classTeacherId String?\n  classTeacher   Teacher? @relation(fields: [classTeacherId], references: [id])\n\n  // Relations\n  sections Section[]\n  students Student[]\n  subjects Subject[]\n  // feeStructures FeeStructure[] // Class wise fee alada hoy\n\n  @@map(\"classes\")\n}\n\nmodel Section {\n  id   String @id @default(uuid())\n  name String // \"Section A\", \"Morning Shift\"\n\n  classId String\n  class   Class  @relation(fields: [classId], references: [id])\n\n  students Student[]\n  routines Routine[] // Section wise routine hoy\n\n  @@map(\"sections\")\n}\n\nmodel Subject {\n  id   String  @id @default(uuid())\n  name String // \"Mathematics\"\n  code String? // \"MATH101\"\n\n  classId String\n  class   Class  @relation(fields: [classId], references: [id])\n\n  routines Routine[]\n  results  Result[]\n\n  @@map(\"subjects\")\n}\n\nenum Role {\n  admin\n  teacher\n  accountant\n  student\n  parent\n}\n\nenum Gender {\n  MALE\n  FEMALE\n  OTHER\n}\n\nenum AttendanceStatus {\n  PRESENT\n  ABSENT\n  LATE\n  LEAVE // Authorized Leave\n}\n\nmodel AcademicYear {\n  id        String   @id @default(uuid())\n  name      String // \"2024-2025\"\n  startDate DateTime\n  endDate   DateTime\n  isCurrent Boolean  @default(false) // Kon year ta active ache\n\n  classes Class[]\n  exams   Exam[]\n\n  @@map(\"academic_years\")\n}\n\nmodel Exam {\n  id        String   @id @default(uuid())\n  title     String // \"Final Term 2024\"\n  startDate DateTime\n  endDate   DateTime\n\n  academicYearId String\n  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])\n\n  results Result[]\n\n  @@map(\"exams\")\n}\n\nmodel Result {\n  id         String  @id @default(uuid())\n  marks      Float\n  totalMarks Float // Out of 100 or 50\n  grade      String? // \"A+\", \"B\" (Calculated in backend)\n\n  studentId String\n  student   Student @relation(fields: [studentId], references: [id])\n\n  examId String\n  exam   Exam   @relation(fields: [examId], references: [id])\n\n  subjectId String\n  subject   Subject @relation(fields: [subjectId], references: [id])\n\n  // Security: Result locked naki published?\n  isPublished Boolean @default(false)\n\n  @@unique([studentId, examId, subjectId]) // Unique constraint\n  @@map(\"results\")\n}\n\nmodel NoticeBoard {\n  id          String   @id @default(uuid())\n  title       String\n  content     String\n  targetRoles Role[] // Array of roles: [\"STUDENT\", \"TEACHER\"]\n  isArchived  Boolean  @default(false)\n  postedAt    DateTime @default(now())\n\n  @@map(\"notices\")\n}\n\nmodel Notification {\n  id        String   @id @default(uuid())\n  title     String\n  message   String\n  isRead    Boolean  @default(false)\n  createdAt DateTime @default(now())\n\n  userId String\n  user   User   @relation(fields: [userId], references: [id])\n\n  @@map(\"notifications\")\n}\n\nmodel Routine {\n  id        String @id @default(uuid())\n  day       String // \"Sunday\", \"Monday\"\n  startTime String // \"10:00 AM\" (String or DateTime can be used logic wise)\n  endTime   String // \"10:45 AM\"\n\n  // Routine Connects 3 entities:\n  sectionId String\n  section   Section @relation(fields: [sectionId], references: [id])\n\n  subjectId String\n  subject   Subject @relation(fields: [subjectId], references: [id])\n\n  teacherId String\n  teacher   Teacher @relation(fields: [teacherId], references: [id])\n\n  // Validation Logic backend e likhte hobe jate double booking na hoy\n  @@map(\"routines\")\n}\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Parent {\n  id         String  @id @default(uuid())\n  fatherName String\n  motherName String\n  phone      String  @unique\n  email      String?\n\n  userId String @unique\n  user   User   @relation(fields: [userId], references: [id])\n\n  students Student[] // Ekjon parent er multiple baccha thakte pare\n\n  @@map(\"parents\")\n}\n\nmodel Staff {\n  id       String @id @default(uuid())\n  name     String\n  position String // e.g. Accountant, Clerk\n  phone    String\n\n  userId String @unique\n  user   User   @relation(fields: [userId], references: [id])\n\n  @@map(\"staffs\")\n}\n\nmodel Student {\n  id          String   @id @default(uuid())\n  firstName   String\n  lastName    String\n  rollNo      Int      @unique\n  dateOfBirth DateTime\n  gender      Gender\n  bloodGroup  String?\n  address     String?\n\n  // Connection with User (Auth)\n  userId String @unique\n  user   User   @relation(fields: [userId], references: [id])\n\n  // Connection with Academic Structure\n  classId String\n  class   Class  @relation(fields: [classId], references: [id])\n\n  sectionId String\n  section   Section @relation(fields: [sectionId], references: [id])\n\n  parentId String?\n  parent   Parent? @relation(fields: [parentId], references: [id])\n\n  // Reverse Relations (Data access korar jonno)\n  attendances Attendance[]\n  results     Result[]\n  // transactions Transaction[]\n  // studentFees StudentFee[] // Individual invoice records\n\n  @@map(\"students\")\n}\n\nmodel Teacher {\n  id          String   @id @default(uuid())\n  firstName   String\n  lastName    String\n  email       String?  @unique\n  phone       String\n  designation String // e.g. Senior Teacher, Assistant Teacher\n  joiningDate DateTime\n\n  userId String @unique\n  user   User   @relation(fields: [userId], references: [id])\n\n  // Class Teacher Logic: Ekjon teacher ekta class er \"Class Teacher\" hote pare\n  classTeacherOf Class[]\n\n  // Routine: Teacher kon kon class nibe\n  routines Routine[]\n\n  @@map(\"teachers\")\n}\n\nmodel User {\n  id String @id @default(uuid())\n\n  role Role\n\n  // Relationship (One-to-One): Ekjon user er ektai specific profile thakbe\n  studentProfile Student?\n  teacherProfile Teacher?\n  parentProfile  Parent?\n  staffProfile   Staff?\n  notifications  Notification[]\n\n  @@map(\"users\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
     "types": {}
-  },
-  "dirname": ""
+  }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"dbName\":\"users\",\"schema\":null,\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":true,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"String\",\"nativeType\":null,\"default\":{\"name\":\"uuid\",\"args\":[4]},\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"name\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"email\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":true,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"passwordHash\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"DateTime\",\"nativeType\":null,\"default\":{\"name\":\"now\",\"args\":[]},\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"DateTime\",\"nativeType\":null,\"default\":{\"name\":\"now\",\"args\":[]},\"isGenerated\":false,\"isUpdatedAt\":false}],\"primaryKey\":null,\"uniqueFields\":[],\"uniqueIndexes\":[],\"isGenerated\":false}},\"enums\":{},\"types\":{}}")
-config.engineWasm = undefined
-config.compilerWasm = undefined
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Attendance\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"checkIn\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"checkOut\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"AttendanceStatus\"},{\"name\":\"studentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"student\",\"kind\":\"object\",\"type\":\"Student\",\"relationName\":\"AttendanceToStudent\"},{\"name\":\"remarks\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"attendances\"},\"Class\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"academicYearId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"academicYear\",\"kind\":\"object\",\"type\":\"AcademicYear\",\"relationName\":\"AcademicYearToClass\"},{\"name\":\"classTeacherId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"classTeacher\",\"kind\":\"object\",\"type\":\"Teacher\",\"relationName\":\"ClassToTeacher\"},{\"name\":\"sections\",\"kind\":\"object\",\"type\":\"Section\",\"relationName\":\"ClassToSection\"},{\"name\":\"students\",\"kind\":\"object\",\"type\":\"Student\",\"relationName\":\"ClassToStudent\"},{\"name\":\"subjects\",\"kind\":\"object\",\"type\":\"Subject\",\"relationName\":\"ClassToSubject\"}],\"dbName\":\"classes\"},\"Section\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"classId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"class\",\"kind\":\"object\",\"type\":\"Class\",\"relationName\":\"ClassToSection\"},{\"name\":\"students\",\"kind\":\"object\",\"type\":\"Student\",\"relationName\":\"SectionToStudent\"},{\"name\":\"routines\",\"kind\":\"object\",\"type\":\"Routine\",\"relationName\":\"RoutineToSection\"}],\"dbName\":\"sections\"},\"Subject\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"classId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"class\",\"kind\":\"object\",\"type\":\"Class\",\"relationName\":\"ClassToSubject\"},{\"name\":\"routines\",\"kind\":\"object\",\"type\":\"Routine\",\"relationName\":\"RoutineToSubject\"},{\"name\":\"results\",\"kind\":\"object\",\"type\":\"Result\",\"relationName\":\"ResultToSubject\"}],\"dbName\":\"subjects\"},\"AcademicYear\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"isCurrent\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"classes\",\"kind\":\"object\",\"type\":\"Class\",\"relationName\":\"AcademicYearToClass\"},{\"name\":\"exams\",\"kind\":\"object\",\"type\":\"Exam\",\"relationName\":\"AcademicYearToExam\"}],\"dbName\":\"academic_years\"},\"Exam\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"academicYearId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"academicYear\",\"kind\":\"object\",\"type\":\"AcademicYear\",\"relationName\":\"AcademicYearToExam\"},{\"name\":\"results\",\"kind\":\"object\",\"type\":\"Result\",\"relationName\":\"ExamToResult\"}],\"dbName\":\"exams\"},\"Result\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"marks\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"totalMarks\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"grade\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"studentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"student\",\"kind\":\"object\",\"type\":\"Student\",\"relationName\":\"ResultToStudent\"},{\"name\":\"examId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"exam\",\"kind\":\"object\",\"type\":\"Exam\",\"relationName\":\"ExamToResult\"},{\"name\":\"subjectId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subject\",\"kind\":\"object\",\"type\":\"Subject\",\"relationName\":\"ResultToSubject\"},{\"name\":\"isPublished\",\"kind\":\"scalar\",\"type\":\"Boolean\"}],\"dbName\":\"results\"},\"NoticeBoard\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"targetRoles\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"isArchived\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"postedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"notices\"},\"Notification\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"message\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isRead\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"NotificationToUser\"}],\"dbName\":\"notifications\"},\"Routine\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"day\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startTime\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"endTime\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sectionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"section\",\"kind\":\"object\",\"type\":\"Section\",\"relationName\":\"RoutineToSection\"},{\"name\":\"subjectId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subject\",\"kind\":\"object\",\"type\":\"Subject\",\"relationName\":\"RoutineToSubject\"},{\"name\":\"teacherId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"teacher\",\"kind\":\"object\",\"type\":\"Teacher\",\"relationName\":\"RoutineToTeacher\"}],\"dbName\":\"routines\"},\"Parent\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fatherName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"motherName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ParentToUser\"},{\"name\":\"students\",\"kind\":\"object\",\"type\":\"Student\",\"relationName\":\"ParentToStudent\"}],\"dbName\":\"parents\"},\"Staff\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"StaffToUser\"}],\"dbName\":\"staffs\"},\"Student\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"rollNo\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"dateOfBirth\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"gender\",\"kind\":\"enum\",\"type\":\"Gender\"},{\"name\":\"bloodGroup\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"StudentToUser\"},{\"name\":\"classId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"class\",\"kind\":\"object\",\"type\":\"Class\",\"relationName\":\"ClassToStudent\"},{\"name\":\"sectionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"section\",\"kind\":\"object\",\"type\":\"Section\",\"relationName\":\"SectionToStudent\"},{\"name\":\"parentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"parent\",\"kind\":\"object\",\"type\":\"Parent\",\"relationName\":\"ParentToStudent\"},{\"name\":\"attendances\",\"kind\":\"object\",\"type\":\"Attendance\",\"relationName\":\"AttendanceToStudent\"},{\"name\":\"results\",\"kind\":\"object\",\"type\":\"Result\",\"relationName\":\"ResultToStudent\"}],\"dbName\":\"students\"},\"Teacher\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"designation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"joiningDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"TeacherToUser\"},{\"name\":\"classTeacherOf\",\"kind\":\"object\",\"type\":\"Class\",\"relationName\":\"ClassToTeacher\"},{\"name\":\"routines\",\"kind\":\"object\",\"type\":\"Routine\",\"relationName\":\"RoutineToTeacher\"}],\"dbName\":\"teachers\"},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"studentProfile\",\"kind\":\"object\",\"type\":\"Student\",\"relationName\":\"StudentToUser\"},{\"name\":\"teacherProfile\",\"kind\":\"object\",\"type\":\"Teacher\",\"relationName\":\"TeacherToUser\"},{\"name\":\"parentProfile\",\"kind\":\"object\",\"type\":\"Parent\",\"relationName\":\"ParentToUser\"},{\"name\":\"staffProfile\",\"kind\":\"object\",\"type\":\"Staff\",\"relationName\":\"StaffToUser\"},{\"name\":\"notifications\",\"kind\":\"object\",\"type\":\"Notification\",\"relationName\":\"NotificationToUser\"}],\"dbName\":\"users\"}},\"enums\":{},\"types\":{}}")
 
+async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
+  const { Buffer } = await import('node:buffer')
+  const wasmArray = Buffer.from(wasmBase64, 'base64')
+  return new WebAssembly.Module(wasmArray)
+}
+
+config.compilerWasm = {
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.postgresql.mjs"),
+
+  getQueryCompilerWasmModule: async () => {
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.postgresql.wasm-base64.mjs")
+    return await decodeBase64AsWasm(wasm)
+  }
+}
 
 
 
@@ -84,8 +58,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Users
-   * const users = await prisma.user.findMany()
+   * // Fetch zero or more Attendances
+   * const attendances = await prisma.attendance.findMany()
    * ```
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -96,7 +70,7 @@ export interface PrismaClientConstructor {
     LogOpts extends LogOptions<Options> = LogOptions<Options>,
     OmitOpts extends Prisma.PrismaClientOptions['omit'] = Options extends { omit: infer U } ? U : Prisma.PrismaClientOptions['omit'],
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-  >(options?: Prisma.Subset<Options, Prisma.PrismaClientOptions> ): PrismaClient<LogOpts, OmitOpts, ExtArgs>
+  >(options: Prisma.Subset<Options, Prisma.PrismaClientOptions> ): PrismaClient<LogOpts, OmitOpts, ExtArgs>
 }
 
 /**
@@ -106,8 +80,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more Attendances
+ * const attendances = await prisma.attendance.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -115,7 +89,7 @@ export interface PrismaClientConstructor {
 
 export interface PrismaClient<
   in LogOpts extends Prisma.LogLevel = never,
-  in out OmitOpts extends Prisma.PrismaClientOptions['omit'] = Prisma.PrismaClientOptions['omit'],
+  in out OmitOpts extends Prisma.PrismaClientOptions['omit'] = undefined,
   in out ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -196,12 +170,151 @@ export interface PrismaClient<
 
   $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => runtime.Types.Utils.JsPromise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): runtime.Types.Utils.JsPromise<R>
 
-
   $extends: runtime.Types.Extensions.ExtendsHook<"extends", Prisma.TypeMapCb<OmitOpts>, ExtArgs, runtime.Types.Utils.Call<Prisma.TypeMapCb<OmitOpts>, {
     extArgs: ExtArgs
   }>>
 
       /**
+   * `prisma.attendance`: Exposes CRUD operations for the **Attendance** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Attendances
+    * const attendances = await prisma.attendance.findMany()
+    * ```
+    */
+  get attendance(): Prisma.AttendanceDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.class`: Exposes CRUD operations for the **Class** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Classes
+    * const classes = await prisma.class.findMany()
+    * ```
+    */
+  get class(): Prisma.ClassDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.section`: Exposes CRUD operations for the **Section** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Sections
+    * const sections = await prisma.section.findMany()
+    * ```
+    */
+  get section(): Prisma.SectionDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.subject`: Exposes CRUD operations for the **Subject** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Subjects
+    * const subjects = await prisma.subject.findMany()
+    * ```
+    */
+  get subject(): Prisma.SubjectDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.academicYear`: Exposes CRUD operations for the **AcademicYear** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AcademicYears
+    * const academicYears = await prisma.academicYear.findMany()
+    * ```
+    */
+  get academicYear(): Prisma.AcademicYearDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.exam`: Exposes CRUD operations for the **Exam** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Exams
+    * const exams = await prisma.exam.findMany()
+    * ```
+    */
+  get exam(): Prisma.ExamDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.result`: Exposes CRUD operations for the **Result** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Results
+    * const results = await prisma.result.findMany()
+    * ```
+    */
+  get result(): Prisma.ResultDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.noticeBoard`: Exposes CRUD operations for the **NoticeBoard** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NoticeBoards
+    * const noticeBoards = await prisma.noticeBoard.findMany()
+    * ```
+    */
+  get noticeBoard(): Prisma.NoticeBoardDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notifications
+    * const notifications = await prisma.notification.findMany()
+    * ```
+    */
+  get notification(): Prisma.NotificationDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.routine`: Exposes CRUD operations for the **Routine** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Routines
+    * const routines = await prisma.routine.findMany()
+    * ```
+    */
+  get routine(): Prisma.RoutineDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.parent`: Exposes CRUD operations for the **Parent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Parents
+    * const parents = await prisma.parent.findMany()
+    * ```
+    */
+  get parent(): Prisma.ParentDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.staff`: Exposes CRUD operations for the **Staff** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Staff
+    * const staff = await prisma.staff.findMany()
+    * ```
+    */
+  get staff(): Prisma.StaffDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.student`: Exposes CRUD operations for the **Student** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Students
+    * const students = await prisma.student.findMany()
+    * ```
+    */
+  get student(): Prisma.StudentDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.teacher`: Exposes CRUD operations for the **Teacher** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Teachers
+    * const teachers = await prisma.teacher.findMany()
+    * ```
+    */
+  get teacher(): Prisma.TeacherDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
     * Example usage:
     * ```ts
@@ -212,7 +325,6 @@ export interface PrismaClient<
   get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
-export function getPrismaClientClass(dirname: string): PrismaClientConstructor {
-  config.dirname = dirname
+export function getPrismaClientClass(): PrismaClientConstructor {
   return runtime.getPrismaClient(config) as unknown as PrismaClientConstructor
 }

@@ -1,0 +1,14 @@
+model User {
+  id String @id @default(uuid())
+
+  role Role
+
+  // Relationship (One-to-One): Ekjon user er ektai specific profile thakbe
+  studentProfile Student?
+  teacherProfile Teacher?
+  parentProfile  Parent?
+  staffProfile   Staff?
+  notifications  Notification[]
+
+  @@map("users")
+}
