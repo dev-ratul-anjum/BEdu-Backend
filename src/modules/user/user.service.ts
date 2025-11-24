@@ -1,14 +1,61 @@
 import { db } from '$/db/index.ts'
-import { TCreateUserSchema } from './user.schema.ts'
+import ApiError from '$/utils/ApiError.ts'
+import { TCreateUserSchema, TLoginUserSchema } from './user.schema.ts'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+
 
 const userService = {
-  create: async (data: TCreateUserSchema) => {
+  register: async (data: TCreateUserSchema) => {
     try {
+      const user = await db.user.findUnique({
+        where: {
+          username: data.username,
+        },
+      })
+
+      if (user) {
+        throw new ApiError("User already exists", 409)
+      }
+
+
+      const hashedPassword = await bcrypt.hash(data.password, 10)
       const newUser = await db.user.create({
-        data,
+        data: {
+          ...data,
+          password: hashedPassword,
+        },
       })
 
       return newUser
+    } catch (error) {
+      throw error
+    }
+  },
+  login : async (data: TLoginUserSchema) => {
+    try {
+      const user = await db.user.findUnique({
+        where: {
+          username: data.username,
+        },
+      })
+
+      if (!user) {
+        throw new ApiError("User not found", 404)
+      }
+
+      const isPasswordValid = await bcrypt.compare(data.password, user.password)
+
+      if (!isPasswordValid) {
+        throw new ApiError("Invalid password", 401)
+      }
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+        expiresIn: '1h',
+      })
+
+
+
+      return {user, token}
     } catch (error) {
       throw error
     }

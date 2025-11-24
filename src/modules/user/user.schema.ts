@@ -8,3 +8,10 @@ export const createUserSchema = z.object({
 })
 
 export type TCreateUserSchema = z.infer<typeof createUserSchema>
+
+export const loginUserSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+})
+
+export type TLoginUserSchema = z.infer<typeof loginUserSchema>
