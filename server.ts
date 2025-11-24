@@ -1,9 +1,21 @@
 import app from '$/app.ts'
-import { config } from 'dotenv'
+import 'dotenv/config'
 
-config()
 const PORT = process.env.PORT
 
 app.listen(PORT, () => {
   console.log(`🚀 Server is flying on http://localhost:${PORT}`)
 })
+
+const startServer = async () => {
+  try {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server started on http://localhost:${PORT}`)
+    })
+  } catch (err) {
+    console.error('❌ Server failed to start:', err)
+    process.exit(1)
+  }
+}
+
+startServer()
