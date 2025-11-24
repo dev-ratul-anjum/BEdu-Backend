@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "main": "server.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch server.ts",
+    "build": "tsdown",
+    "start": "node dist/server.mjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.13.11",
+    "@types/pg": "^8.15.6",
+    "tsdown": "^0.16.6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.2"
+  }
+}
