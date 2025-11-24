@@ -61,8 +61,10 @@ export const ModelName = {
   NoticeBoard: 'NoticeBoard',
   Notification: 'Notification',
   Routine: 'Routine',
+  Accountant: 'Accountant',
+  Admin: 'Admin',
   Parent: 'Parent',
-  Staff: 'Staff',
+  Phone: 'Phone',
   Student: 'Student',
   Teacher: 'Teacher',
   User: 'User'
@@ -128,7 +130,7 @@ export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeo
 
 export const AcademicYearScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  session: 'session',
   startDate: 'startDate',
   endDate: 'endDate',
   isCurrent: 'isCurrent'
@@ -151,7 +153,6 @@ export type ExamScalarFieldEnum = (typeof ExamScalarFieldEnum)[keyof typeof Exam
 export const ResultScalarFieldEnum = {
   id: 'id',
   marks: 'marks',
-  totalMarks: 'totalMarks',
   grade: 'grade',
   studentId: 'studentId',
   examId: 'examId',
@@ -178,7 +179,6 @@ export const NotificationScalarFieldEnum = {
   id: 'id',
   title: 'title',
   message: 'message',
-  isRead: 'isRead',
   createdAt: 'createdAt',
   userId: 'userId'
 } as const
@@ -191,6 +191,7 @@ export const RoutineScalarFieldEnum = {
   day: 'day',
   startTime: 'startTime',
   endTime: 'endTime',
+  academicYearId: 'academicYearId',
   sectionId: 'sectionId',
   subjectId: 'subjectId',
   teacherId: 'teacherId'
@@ -199,11 +200,28 @@ export const RoutineScalarFieldEnum = {
 export type RoutineScalarFieldEnum = (typeof RoutineScalarFieldEnum)[keyof typeof RoutineScalarFieldEnum]
 
 
+export const AccountantScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  userId: 'userId'
+} as const
+
+export type AccountantScalarFieldEnum = (typeof AccountantScalarFieldEnum)[keyof typeof AccountantScalarFieldEnum]
+
+
+export const AdminScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  userId: 'userId'
+} as const
+
+export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
+
+
 export const ParentScalarFieldEnum = {
   id: 'id',
-  fatherName: 'fatherName',
-  motherName: 'motherName',
-  phone: 'phone',
+  name: 'name',
   email: 'email',
   userId: 'userId'
 } as const
@@ -211,21 +229,21 @@ export const ParentScalarFieldEnum = {
 export type ParentScalarFieldEnum = (typeof ParentScalarFieldEnum)[keyof typeof ParentScalarFieldEnum]
 
 
-export const StaffScalarFieldEnum = {
+export const PhoneScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  position: 'position',
-  phone: 'phone',
-  userId: 'userId'
+  number: 'number',
+  parentId: 'parentId',
+  teacherId: 'teacherId',
+  accountantId: 'accountantId',
+  adminId: 'adminId'
 } as const
 
-export type StaffScalarFieldEnum = (typeof StaffScalarFieldEnum)[keyof typeof StaffScalarFieldEnum]
+export type PhoneScalarFieldEnum = (typeof PhoneScalarFieldEnum)[keyof typeof PhoneScalarFieldEnum]
 
 
 export const StudentScalarFieldEnum = {
   id: 'id',
-  firstName: 'firstName',
-  lastName: 'lastName',
+  name: 'name',
   rollNo: 'rollNo',
   dateOfBirth: 'dateOfBirth',
   gender: 'gender',
@@ -242,10 +260,10 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 
 export const TeacherScalarFieldEnum = {
   id: 'id',
-  firstName: 'firstName',
-  lastName: 'lastName',
+  name: 'name',
   email: 'email',
-  phone: 'phone',
+  degree: 'degree',
+  indexNumber: 'indexNumber',
   designation: 'designation',
   joiningDate: 'joiningDate',
   userId: 'userId'
@@ -256,7 +274,9 @@ export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeo
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  role: 'role'
+  role: 'role',
+  username: 'username',
+  password: 'password'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

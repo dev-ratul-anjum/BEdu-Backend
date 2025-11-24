@@ -90,15 +90,25 @@ export type Notification = Prisma.NotificationModel
  */
 export type Routine = Prisma.RoutineModel
 /**
+ * Model Accountant
+ * 
+ */
+export type Accountant = Prisma.AccountantModel
+/**
+ * Model Admin
+ * 
+ */
+export type Admin = Prisma.AdminModel
+/**
  * Model Parent
  * 
  */
 export type Parent = Prisma.ParentModel
 /**
- * Model Staff
+ * Model Phone
  * 
  */
-export type Staff = Prisma.StaffModel
+export type Phone = Prisma.PhoneModel
 /**
  * Model Student
  * 

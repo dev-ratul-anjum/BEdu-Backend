@@ -394,8 +394,10 @@ export const ModelName = {
   NoticeBoard: 'NoticeBoard',
   Notification: 'Notification',
   Routine: 'Routine',
+  Accountant: 'Accountant',
+  Admin: 'Admin',
   Parent: 'Parent',
-  Staff: 'Staff',
+  Phone: 'Phone',
   Student: 'Student',
   Teacher: 'Teacher',
   User: 'User'
@@ -414,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "attendance" | "class" | "section" | "subject" | "academicYear" | "exam" | "result" | "noticeBoard" | "notification" | "routine" | "parent" | "staff" | "student" | "teacher" | "user"
+    modelProps: "attendance" | "class" | "section" | "subject" | "academicYear" | "exam" | "result" | "noticeBoard" | "notification" | "routine" | "accountant" | "admin" | "parent" | "phone" | "student" | "teacher" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1158,6 +1160,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Accountant: {
+      payload: Prisma.$AccountantPayload<ExtArgs>
+      fields: Prisma.AccountantFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AccountantFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AccountantFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload>
+        }
+        findFirst: {
+          args: Prisma.AccountantFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AccountantFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload>
+        }
+        findMany: {
+          args: Prisma.AccountantFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload>[]
+        }
+        create: {
+          args: Prisma.AccountantCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload>
+        }
+        createMany: {
+          args: Prisma.AccountantCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AccountantCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload>[]
+        }
+        delete: {
+          args: Prisma.AccountantDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload>
+        }
+        update: {
+          args: Prisma.AccountantUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload>
+        }
+        deleteMany: {
+          args: Prisma.AccountantDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AccountantUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AccountantUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload>[]
+        }
+        upsert: {
+          args: Prisma.AccountantUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantPayload>
+        }
+        aggregate: {
+          args: Prisma.AccountantAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAccountant>
+        }
+        groupBy: {
+          args: Prisma.AccountantGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountantGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AccountantCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountantCountAggregateOutputType> | number
+        }
+      }
+    }
+    Admin: {
+      payload: Prisma.$AdminPayload<ExtArgs>
+      fields: Prisma.AdminFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdminFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdminFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        findFirst: {
+          args: Prisma.AdminFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdminFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        findMany: {
+          args: Prisma.AdminFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>[]
+        }
+        create: {
+          args: Prisma.AdminCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        createMany: {
+          args: Prisma.AdminCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdminCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>[]
+        }
+        delete: {
+          args: Prisma.AdminDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        update: {
+          args: Prisma.AdminUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdminDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdminUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdminUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdminUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        aggregate: {
+          args: Prisma.AdminAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdmin>
+        }
+        groupBy: {
+          args: Prisma.AdminGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdminCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminCountAggregateOutputType> | number
+        }
+      }
+    }
     Parent: {
       payload: Prisma.$ParentPayload<ExtArgs>
       fields: Prisma.ParentFieldRefs
@@ -1232,77 +1382,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Staff: {
-      payload: Prisma.$StaffPayload<ExtArgs>
-      fields: Prisma.StaffFieldRefs
+    Phone: {
+      payload: Prisma.$PhonePayload<ExtArgs>
+      fields: Prisma.PhoneFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.StaffFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload> | null
+          args: Prisma.PhoneFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.StaffFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload>
+          args: Prisma.PhoneFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload>
         }
         findFirst: {
-          args: Prisma.StaffFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload> | null
+          args: Prisma.PhoneFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.StaffFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload>
+          args: Prisma.PhoneFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload>
         }
         findMany: {
-          args: Prisma.StaffFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload>[]
+          args: Prisma.PhoneFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload>[]
         }
         create: {
-          args: Prisma.StaffCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload>
+          args: Prisma.PhoneCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload>
         }
         createMany: {
-          args: Prisma.StaffCreateManyArgs<ExtArgs>
+          args: Prisma.PhoneCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.StaffCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload>[]
+          args: Prisma.PhoneCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload>[]
         }
         delete: {
-          args: Prisma.StaffDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload>
+          args: Prisma.PhoneDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload>
         }
         update: {
-          args: Prisma.StaffUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload>
+          args: Prisma.PhoneUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload>
         }
         deleteMany: {
-          args: Prisma.StaffDeleteManyArgs<ExtArgs>
+          args: Prisma.PhoneDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.StaffUpdateManyArgs<ExtArgs>
+          args: Prisma.PhoneUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.StaffUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload>[]
+          args: Prisma.PhoneUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload>[]
         }
         upsert: {
-          args: Prisma.StaffUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffPayload>
+          args: Prisma.PhoneUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PhonePayload>
         }
         aggregate: {
-          args: Prisma.StaffAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateStaff>
+          args: Prisma.PhoneAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePhone>
         }
         groupBy: {
-          args: Prisma.StaffGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StaffGroupByOutputType>[]
+          args: Prisma.PhoneGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PhoneGroupByOutputType>[]
         }
         count: {
-          args: Prisma.StaffCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StaffCountAggregateOutputType> | number
+          args: Prisma.PhoneCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PhoneCountAggregateOutputType> | number
         }
       }
     }
@@ -1611,7 +1761,7 @@ export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeo
 
 export const AcademicYearScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  session: 'session',
   startDate: 'startDate',
   endDate: 'endDate',
   isCurrent: 'isCurrent'
@@ -1634,7 +1784,6 @@ export type ExamScalarFieldEnum = (typeof ExamScalarFieldEnum)[keyof typeof Exam
 export const ResultScalarFieldEnum = {
   id: 'id',
   marks: 'marks',
-  totalMarks: 'totalMarks',
   grade: 'grade',
   studentId: 'studentId',
   examId: 'examId',
@@ -1661,7 +1810,6 @@ export const NotificationScalarFieldEnum = {
   id: 'id',
   title: 'title',
   message: 'message',
-  isRead: 'isRead',
   createdAt: 'createdAt',
   userId: 'userId'
 } as const
@@ -1674,6 +1822,7 @@ export const RoutineScalarFieldEnum = {
   day: 'day',
   startTime: 'startTime',
   endTime: 'endTime',
+  academicYearId: 'academicYearId',
   sectionId: 'sectionId',
   subjectId: 'subjectId',
   teacherId: 'teacherId'
@@ -1682,11 +1831,28 @@ export const RoutineScalarFieldEnum = {
 export type RoutineScalarFieldEnum = (typeof RoutineScalarFieldEnum)[keyof typeof RoutineScalarFieldEnum]
 
 
+export const AccountantScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  userId: 'userId'
+} as const
+
+export type AccountantScalarFieldEnum = (typeof AccountantScalarFieldEnum)[keyof typeof AccountantScalarFieldEnum]
+
+
+export const AdminScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  userId: 'userId'
+} as const
+
+export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
+
+
 export const ParentScalarFieldEnum = {
   id: 'id',
-  fatherName: 'fatherName',
-  motherName: 'motherName',
-  phone: 'phone',
+  name: 'name',
   email: 'email',
   userId: 'userId'
 } as const
@@ -1694,21 +1860,21 @@ export const ParentScalarFieldEnum = {
 export type ParentScalarFieldEnum = (typeof ParentScalarFieldEnum)[keyof typeof ParentScalarFieldEnum]
 
 
-export const StaffScalarFieldEnum = {
+export const PhoneScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  position: 'position',
-  phone: 'phone',
-  userId: 'userId'
+  number: 'number',
+  parentId: 'parentId',
+  teacherId: 'teacherId',
+  accountantId: 'accountantId',
+  adminId: 'adminId'
 } as const
 
-export type StaffScalarFieldEnum = (typeof StaffScalarFieldEnum)[keyof typeof StaffScalarFieldEnum]
+export type PhoneScalarFieldEnum = (typeof PhoneScalarFieldEnum)[keyof typeof PhoneScalarFieldEnum]
 
 
 export const StudentScalarFieldEnum = {
   id: 'id',
-  firstName: 'firstName',
-  lastName: 'lastName',
+  name: 'name',
   rollNo: 'rollNo',
   dateOfBirth: 'dateOfBirth',
   gender: 'gender',
@@ -1725,10 +1891,10 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 
 export const TeacherScalarFieldEnum = {
   id: 'id',
-  firstName: 'firstName',
-  lastName: 'lastName',
+  name: 'name',
   email: 'email',
-  phone: 'phone',
+  degree: 'degree',
+  indexNumber: 'indexNumber',
   designation: 'designation',
   joiningDate: 'joiningDate',
   userId: 'userId'
@@ -1739,7 +1905,9 @@ export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeo
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  role: 'role'
+  role: 'role',
+  username: 'username',
+  password: 'password'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1849,6 +2017,20 @@ export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Role'
  */
 export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+    
+
+
+/**
+ * Reference to a field of type 'DayOfWeek'
+ */
+export type EnumDayOfWeekFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DayOfWeek'>
+    
+
+
+/**
+ * Reference to a field of type 'DayOfWeek[]'
+ */
+export type ListEnumDayOfWeekFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DayOfWeek[]'>
     
 
 
@@ -1968,8 +2150,10 @@ export type GlobalOmitConfig = {
   noticeBoard?: Prisma.NoticeBoardOmit
   notification?: Prisma.NotificationOmit
   routine?: Prisma.RoutineOmit
+  accountant?: Prisma.AccountantOmit
+  admin?: Prisma.AdminOmit
   parent?: Prisma.ParentOmit
-  staff?: Prisma.StaffOmit
+  phone?: Prisma.PhoneOmit
   student?: Prisma.StudentOmit
   teacher?: Prisma.TeacherOmit
   user?: Prisma.UserOmit

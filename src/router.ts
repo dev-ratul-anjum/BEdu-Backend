@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import userRouter from './modules/user/user.routes.ts'
 import apiResponse from './utils/apiResponse.ts'
 
 const appRouter = Router({ caseSensitive: true })
@@ -10,7 +11,6 @@ appRouter.all('/health-check', async (_req, res) => {
   })
 })
 
-// appRouter.use('/todo', todoRoutes)
-
+appRouter.use('/user', userRouter)
 
 export default appRouter

@@ -1,30 +1,28 @@
-import { db } from "$/db/index.ts";
-import { validateData } from "$/lib/validateData.ts";
-import apiResponse from "$/utils/apiResponse.ts";
-import { RequestHandler } from "express";
-import { userSchema } from "./user.schema.ts";
+import { validateData } from '$/lib/validateData.ts'
+import apiResponse from '$/utils/apiResponse.ts'
+import { RequestHandler } from 'express'
+import { createUserSchema } from './user.schema.ts'
+import userService from './user.service.ts'
 
 const userController = {
-    createUser: async (req, res) => {
+  create: async (req, res, next) => {
+    try {
+      const data = validateData(createUserSchema, req.body)
 
-        const data = validateData( userSchema, req.body)
+      const newUser = await userService.create(data)
 
-
-        const newUser = await db.user.create({
-            data,
-        })
-
-        return apiResponse(res, 200, {
-            success: true,
-            message: 'User created successfully',
-            data : newUser
-        })
-    },
-    getUser: async (req, res) => {},
-    updateUser: async (req, res) => {},
-    deleteUser: async (req, res) => {},
-
+      return apiResponse(res, 200, {
+        success: true,
+        message: 'User created successfully',
+        data: newUser,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+  getList: async (req, res) => {},
+  update: async (req, res) => {},
+  delete: async (req, res) => {},
 } satisfies Record<string, RequestHandler>
 
-
-export default userController;
+export default userController
