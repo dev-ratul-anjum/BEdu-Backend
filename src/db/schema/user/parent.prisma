@@ -1,14 +1,13 @@
 model Parent {
-  id         String  @id @default(uuid())
-  fatherName String
-  motherName String
-  phone      String  @unique
-  email      String?
+  id    String  @id @default(uuid())
+  name  String
+  email String?
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
-  students Student[] // Ekjon parent er multiple baccha thakte pare
+  students Student[]
+  phone    Phone[]
 
   @@map("parents")
 }

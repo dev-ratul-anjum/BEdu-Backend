@@ -1,12 +1,13 @@
 model AcademicYear {
   id        String   @id @default(uuid())
-  name      String // "2024-2025"
+  session   String // "2024-2025"
   startDate DateTime
   endDate   DateTime
-  isCurrent Boolean  @default(false) // Kon year ta active ache
+  isCurrent Boolean  @default(false)
 
-  classes Class[]
-  exams   Exam[]
+  classes  Class[]
+  exams    Exam[]
+  routines Routine[]
 
   @@map("academic_years")
 }

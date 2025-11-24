@@ -1,20 +1,19 @@
 model Teacher {
-  id           String   @id @default(uuid())
-  firstName    String
-  lastName     String
-  email        String?  @unique
-  phone        String
-  designation  String   // e.g. Senior Teacher, Assistant Teacher
-  joiningDate  DateTime
+  id          String    @id @default(uuid())
+  name        String
+  email       String?   @unique
+  degree      String?
+  indexNumber String?
+  designation String?
+  joiningDate DateTime?
 
-  userId       String   @unique
-  user         User     @relation(fields: [userId], references: [id])
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 
-  // Class Teacher Logic: Ekjon teacher ekta class er "Class Teacher" hote pare
-  classTeacherOf Class[] 
+  classTeacherOf Class[]
 
-  // Routine: Teacher kon kon class nibe
-  routines     Routine[]
+  routines Routine[]
+  phone    Phone[]
 
   @@map("teachers")
 }

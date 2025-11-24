@@ -1,18 +1,15 @@
 model Student {
   id          String   @id @default(uuid())
-  firstName   String
-  lastName    String
+  name        String
   rollNo      Int      @unique
   dateOfBirth DateTime
   gender      Gender
   bloodGroup  String?
   address     String?
 
-  // Connection with User (Auth)
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
-  // Connection with Academic Structure
   classId String
   class   Class  @relation(fields: [classId], references: [id])
 
@@ -22,11 +19,8 @@ model Student {
   parentId String?
   parent   Parent? @relation(fields: [parentId], references: [id])
 
-  // Reverse Relations (Data access korar jonno)
   attendances Attendance[]
   results     Result[]
-  // transactions Transaction[]
-  // studentFees StudentFee[] // Individual invoice records
 
   @@map("students")
 }

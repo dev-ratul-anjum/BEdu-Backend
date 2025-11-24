@@ -1,19 +1,20 @@
 model Routine {
-  id        String   @id @default(uuid())
-  day       String   // "Sunday", "Monday"
-  startTime String   // "10:00 AM" (String or DateTime can be used logic wise)
-  endTime   String   // "10:45 AM"
+  id        String    @id @default(uuid())
+  day       DayOfWeek
+  startTime DateTime
+  endTime   DateTime
 
-  // Routine Connects 3 entities:
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+
   sectionId String
-  section   Section  @relation(fields: [sectionId], references: [id])
+  section   Section @relation(fields: [sectionId], references: [id])
 
   subjectId String
-  subject   Subject  @relation(fields: [subjectId], references: [id])
+  subject   Subject @relation(fields: [subjectId], references: [id])
 
   teacherId String
-  teacher   Teacher  @relation(fields: [teacherId], references: [id])
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
 
-  // Validation Logic backend e likhte hobe jate double booking na hoy
   @@map("routines")
 }

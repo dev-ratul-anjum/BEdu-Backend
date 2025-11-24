@@ -18,3 +18,13 @@ enum AttendanceStatus {
   LATE
   LEAVE // Authorized Leave
 }
+
+enum DayOfWeek {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}

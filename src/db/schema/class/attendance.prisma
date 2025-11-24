@@ -1,8 +1,8 @@
 model Attendance {
   id       String           @id @default(uuid())
   date     DateTime         @default(now()) // Only Date part matters
-  checkIn  DateTime? // Time part matters
-  checkOut DateTime?
+  checkIn  DateTime         @default(now())
+  checkOut DateTime         @default(now())
   status   AttendanceStatus
 
   studentId String

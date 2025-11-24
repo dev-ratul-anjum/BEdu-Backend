@@ -1,0 +1,14 @@
+model Phone {
+    id           String      @id @default(uuid())
+    number       String      @unique
+    parent       Parent?     @relation(fields: [parentId], references: [id])
+    parentId     String?
+    teacher      Teacher?    @relation(fields: [teacherId], references: [id])
+    teacherId    String?
+    accountant   Accountant? @relation(fields: [accountantId], references: [id])
+    accountantId String?
+    admin        Admin?      @relation(fields: [adminId], references: [id])
+    adminId      String?
+
+    @@map("phones")
+}

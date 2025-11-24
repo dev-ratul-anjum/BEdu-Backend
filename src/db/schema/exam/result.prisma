@@ -1,8 +1,7 @@
 model Result {
-  id         String  @id @default(uuid())
-  marks      Float
-  totalMarks Float // Out of 100 or 50
-  grade      String? // "A+", "B" (Calculated in backend)
+  id    String  @id @default(uuid())
+  marks Float
+  grade String? // "A+", "B" (Calculated in backend)
 
   studentId String
   student   Student @relation(fields: [studentId], references: [id])

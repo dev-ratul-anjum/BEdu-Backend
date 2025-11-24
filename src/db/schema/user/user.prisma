@@ -3,12 +3,13 @@ model User {
 
   role Role
 
-  // Relationship (One-to-One): Ekjon user er ektai specific profile thakbe
-  studentProfile Student?
-  teacherProfile Teacher?
-  parentProfile  Parent?
-  staffProfile   Staff?
-  notifications  Notification[]
+  admin             Admin?
+  accountantProfile Accountant?
+  teacherProfile    Teacher?
+  studentProfile    Student?
+  parentProfile     Parent?
+
+  notifications Notification[]
 
   @@map("users")
 }
