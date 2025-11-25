@@ -1,10 +1,8 @@
 model User {
-  id String @id @default(uuid())
-
-  role     Role
-  username String @unique
-  password String
-
+  id                String      @id @default(uuid())
+  username          String      @unique
+  password          String
+  role              Role
   admin             Admin?
   accountantProfile Accountant?
   teacherProfile    Teacher?

@@ -1753,7 +1753,8 @@ export const SubjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
   code: 'code',
-  classId: 'classId'
+  classId: 'classId',
+  routineId: 'routineId'
 } as const
 
 export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
@@ -1824,7 +1825,6 @@ export const RoutineScalarFieldEnum = {
   endTime: 'endTime',
   academicYearId: 'academicYearId',
   sectionId: 'sectionId',
-  subjectId: 'subjectId',
   teacherId: 'teacherId'
 } as const
 
@@ -1905,9 +1905,9 @@ export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeo
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  role: 'role',
   username: 'username',
-  password: 'password'
+  password: 'password',
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

@@ -6,8 +6,9 @@ model Subject {
   classId String
   class   Class  @relation(fields: [classId], references: [id])
 
-  routines Routine[]
-  results  Result[]
+  routineId String
+  routine   Routine  @relation(fields: [routineId], references: [id])
+  results   Result[]
 
   @@map("subjects")
 }

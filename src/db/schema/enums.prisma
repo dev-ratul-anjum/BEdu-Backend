@@ -1,9 +1,9 @@
 enum Role {
-  admin
-  teacher
-  accountant
-  student
-  parent
+  ADMIN
+  TEACHER
+  ACCOUNTANT
+  STUDENT
+  PARENT
 }
 
 enum Gender {
