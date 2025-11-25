@@ -1,16 +1,16 @@
 import { Router } from 'express'
-import apiResponse from './middleware/apiResponse.ts'
-import userRouter from './modules/user/user.routes.ts'
+import api_response from './middleware/api_response.ts'
+import user_router from './modules/user/user.router.ts'
 
-const appRouter = Router({ caseSensitive: true })
+const app_router = Router({ caseSensitive: true })
 
-appRouter.all('/health-check', async (_req, res) => {
-  return apiResponse(res, 200, {
+app_router.all('/health-check', async (_req, res) => {
+  return api_response(res, 200, {
     success: true,
     message: 'OK! Server is in good health',
   })
 })
 
-appRouter.use('/user', userRouter)
+app_router.use('/user', user_router)
 
-export default appRouter
+export default app_router

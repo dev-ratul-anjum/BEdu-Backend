@@ -1,10 +1,10 @@
 model NoticeBoard {
-  id          String   @id @default(uuid())
-  title       String
-  content     String
-  targetRoles Role[]   // Array of roles: ["STUDENT", "TEACHER"]
-  isArchived  Boolean  @default(false)
-  postedAt    DateTime @default(now())
+  id           String   @id @default(uuid())
+  title        String
+  content      String
+  target_roles Role[] // Array of roles: ["STUDENT", "TEACHER"]
+  is_archived  Boolean  @default(false)
+  posted_at    DateTime @default(now())
 
   @@map("notices")
 }

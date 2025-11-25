@@ -1,23 +1,23 @@
 model Student {
-  id          String   @id @default(uuid())
-  name        String
-  rollNo      Int      @unique
-  dateOfBirth DateTime
-  gender      Gender
-  bloodGroup  String?
-  address     String?
+  id            String   @id @default(uuid())
+  name          String
+  roll_no       Int      @unique
+  date_of_birth DateTime
+  gender        Gender
+  blood_group   String?
+  address       String?
 
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id])
 
-  classId String
-  class   Class  @relation(fields: [classId], references: [id])
+  class_id String
+  class    Class  @relation(fields: [class_id], references: [id])
 
-  sectionId String
-  section   Section @relation(fields: [sectionId], references: [id])
+  section_id String
+  section    Section @relation(fields: [section_id], references: [id])
 
-  parentId String?
-  parent   Parent? @relation(fields: [parentId], references: [id])
+  parent_id String?
+  parent    Parent? @relation(fields: [parent_id], references: [id])
 
   attendances Attendance[]
   results     Result[]

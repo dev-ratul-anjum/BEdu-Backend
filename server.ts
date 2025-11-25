@@ -3,7 +3,7 @@ import 'dotenv/config'
 
 const PORT = process.env.PORT
 
-const startServer = async () => {
+const start_server = async () => {
   try {
     app.listen(PORT, () => {
       console.log(`🚀 Server started on http://localhost:${PORT}`)
@@ -14,4 +14,4 @@ const startServer = async () => {
   }
 }
 
-startServer()
+start_server()

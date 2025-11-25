@@ -3,12 +3,12 @@ model Subject {
   name String // "Mathematics"
   code String? // "MATH101"
 
-  classId String
-  class   Class  @relation(fields: [classId], references: [id])
+  class_id String
+  class    Class  @relation(fields: [class_id], references: [id])
 
-  routineId String
-  routine   Routine  @relation(fields: [routineId], references: [id])
-  results   Result[]
+  routine_id String
+  routine    Routine  @relation(fields: [routine_id], references: [id])
+  results    Result[]
 
   @@map("subjects")
 }

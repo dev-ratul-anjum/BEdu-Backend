@@ -2,9 +2,9 @@ model Accountant {
   id   String @id @default(uuid())
   name String
 
-  userId String  @unique
-  user   User    @relation(fields: [userId], references: [id])
-  phone  Phone[]
+  user_id String  @unique
+  user    User    @relation(fields: [user_id], references: [id])
+  phone   Phone[]
 
   @@map("staffs")
 }

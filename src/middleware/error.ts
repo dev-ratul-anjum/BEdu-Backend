@@ -1,13 +1,13 @@
-import apiResponse from '$/middleware/apiResponse.ts'
+import api_response from '$/middleware/api_response.ts'
 import { ErrorRequestHandler, RequestHandler } from 'express'
 import { ZodError } from 'zod'
 
-export class ApiError extends Error {
-  statusCode: number
+export class Api_Error extends Error {
+  status_code: number
 
-  constructor(message: string, statusCode: number, stack?: string) {
+  constructor(message: string, status_code: number, stack?: string) {
     super(message)
-    this.statusCode = statusCode
+    this.status_code = status_code
     if (stack) {
       this.stack = stack
     } else {
@@ -16,14 +16,14 @@ export class ApiError extends Error {
   }
 }
 
-export const notFoundHandler: RequestHandler = (_req, res, next) => {
-  return apiResponse(res, 404, {
+export const not_found_handler: RequestHandler = (_req, res, next) => {
+  return api_response(res, 404, {
     error: true,
     message: 'Sorry, that page cannot be found!',
   })
 }
 
-export const globalErrorHandler: ErrorRequestHandler = async (
+export const global_error_handler: ErrorRequestHandler = async (
   error,
   req,
   res,
@@ -33,36 +33,36 @@ export const globalErrorHandler: ErrorRequestHandler = async (
     ? console.log('globalErrorHandler', error)
     : console.log('Error from globalError', error)
 
-  let statusCode = 500
+  let status_code = 500
   let message = 'Something went wrong'
-  let errorMessages = []
+  let error_essages = []
   let path = req.originalUrl // Capture the request path
 
   if (error?.name === 'ValidatorError') {
-    const simplifiedMessage = handleValidationError(error)
-    statusCode = simplifiedMessage?.statusCode
+    const simplifiedMessage = handle_validation_error(error)
+    status_code = simplifiedMessage?.status_code
     message = simplifiedMessage?.message
-    errorMessages = simplifiedMessage?.errorMessages
+    error_essages = simplifiedMessage?.error_messages
   } else if (error instanceof ZodError) {
     const simplifiedError = handleZodError(error)
-    statusCode = simplifiedError.statusCode
+    status_code = simplifiedError.status_code
     message = simplifiedError.message
-    errorMessages = simplifiedError.errorMessages
+    error_essages = simplifiedError.error_messages
   } else if (error?.name === 'CastError') {
-    const simplifiedError = handleCastError(error)
-    statusCode = simplifiedError.statusCode
+    const simplifiedError = handle_cast_error(error)
+    status_code = simplifiedError.status_code
     message = simplifiedError.message
-    errorMessages = simplifiedError.errorMessages
-  } else if (error instanceof ApiError) {
-    statusCode = error?.statusCode || 500
+    error_essages = simplifiedError.error_messages
+  } else if (error instanceof Api_Error) {
+    status_code = error?.status_code || 500
     message = error?.message || 'An error occurred'
-    errorMessages = error?.message ? [{ path: '', message: message }] : []
+    error_essages = error?.message ? [{ path: '', message: message }] : []
   } else if (error instanceof Error) {
     message = error.message
-    errorMessages = error?.message ? [{ path: '', message: error.message }] : []
+    error_essages = error?.message ? [{ path: '', message: error.message }] : []
   }
 
-  return apiResponse(res, statusCode, {
+  return api_response(res, status_code, {
     error: true,
     message,
     path,
@@ -70,16 +70,16 @@ export const globalErrorHandler: ErrorRequestHandler = async (
   })
 }
 
-const handleValidationError = (err: any) => {
+const handle_validation_error = (err: any) => {
   const errors = Object.values(err.errors).map((element: any) => ({
     path: element?.path,
     message: element?.message,
   }))
 
   return {
-    statusCode: 400,
+    status_code: 400,
     message: 'Validation Error',
-    errorMessages: errors,
+    error_messages: errors,
   }
 }
 
@@ -90,13 +90,13 @@ const handleZodError = (error: ZodError) => {
   }))
 
   return {
-    statusCode: 400,
+    status_code: 400,
     message: 'Validation Error from handleZodError',
-    errorMessages: errors,
+    error_messages: errors,
   }
 }
 
-const handleCastError = (error: any) => {
+const handle_cast_error = (error: any) => {
   const errors = [
     {
       path: error.path,
@@ -105,8 +105,8 @@ const handleCastError = (error: any) => {
   ]
 
   return {
-    statusCode: 400,
+    status_code: 400,
     message: 'CastError',
-    errorMessages: errors,
+    error_messages: errors,
   }
 }

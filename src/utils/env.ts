@@ -1,6 +1,6 @@
 import z from 'zod'
 
-const envSchema = z.object({
+const env_schema = z.object({
   PORT: z.string(),
   CORS_ORIGIN: z.string(),
   DATABASE_URL: z.string(),
@@ -12,10 +12,10 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']),
 })
 
-envSchema.safeParse(process.env)
+env_schema.safeParse(process.env)
 
 declare global {
   namespace NodeJS {
-    interface ProcessEnv extends z.infer<typeof envSchema> {}
+    interface ProcessEnv extends z.infer<typeof env_schema> {}
   }
 }

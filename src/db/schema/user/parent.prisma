@@ -3,8 +3,8 @@ model Parent {
   name  String
   email String?
 
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id])
 
   students Student[]
   phone    Phone[]

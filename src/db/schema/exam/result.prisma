@@ -3,18 +3,16 @@ model Result {
   marks Float
   grade String? // "A+", "B" (Calculated in backend)
 
-  studentId String
-  student   Student @relation(fields: [studentId], references: [id])
+  student_id String
+  student    Student @relation(fields: [student_id], references: [id])
 
-  examId String
-  exam   Exam   @relation(fields: [examId], references: [id])
+  exam_id String
+  exam    Exam   @relation(fields: [exam_id], references: [id])
 
-  subjectId String
-  subject   Subject @relation(fields: [subjectId], references: [id])
+  subject_id String
+  subject    Subject @relation(fields: [subject_id], references: [id])
 
-  // Security: Result locked naki published?
-  isPublished Boolean @default(false)
+  is_published Boolean @default(false)
 
-  @@unique([studentId, examId, subjectId]) // Unique constraint
   @@map("results")
 }
