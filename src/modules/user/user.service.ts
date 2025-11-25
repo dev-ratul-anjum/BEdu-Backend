@@ -1,9 +1,7 @@
 import { db } from '$/db/index.ts'
-import ApiError from '$/utils/ApiError.ts'
-import { TCreateUserSchema, TLoginUserSchema } from './user.schema.ts'
+import { ApiError } from '$/middleware/error.ts'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-
+import { TCreateUserSchema, TLoginUserSchema } from './user.schema.ts'
 
 const userService = {
   register: async (data: TCreateUserSchema) => {
@@ -15,9 +13,8 @@ const userService = {
       })
 
       if (user) {
-        throw new ApiError("User already exists", 409)
+        throw new ApiError('User already exists', 409)
       }
-
 
       const hashedPassword = await bcrypt.hash(data.password, 10)
       const newUser = await db.user.create({
@@ -32,7 +29,8 @@ const userService = {
       throw error
     }
   },
-  login : async (data: TLoginUserSchema) => {
+
+  login: async (data: TLoginUserSchema) => {
     try {
       const user = await db.user.findUnique({
         where: {
@@ -41,27 +39,25 @@ const userService = {
       })
 
       if (!user) {
-        throw new ApiError("User not found", 404)
+        throw new ApiError('User not found', 404)
       }
 
       const isPasswordValid = await bcrypt.compare(data.password, user.password)
 
       if (!isPasswordValid) {
-        throw new ApiError("Invalid password", 401)
+        throw new ApiError('Invalid password', 401)
       }
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-      })
 
-
-
-      return {user, token}
+      return { user }
     } catch (error) {
       throw error
     }
   },
+
   getList: () => {},
+
   delete: () => {},
+
   update: () => {},
 }
 

@@ -5,7 +5,11 @@ const envSchema = z.object({
   CORS_ORIGIN: z.string(),
   DATABASE_URL: z.string(),
   JWT_SECRET: z.string(),
-  COOKIE_SECRET : z.string(),
+  COOKIE_SECRET: z.string(),
+  ACCESS_TOKEN_NAME: z.string(),
+  ACCESS_TOKEN_EXPIRES_IN: z.string(),
+
+  NODE_ENV: z.enum(['development', 'production', 'test']),
 })
 
 envSchema.safeParse(process.env)
