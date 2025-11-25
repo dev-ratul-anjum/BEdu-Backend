@@ -1,9 +1,9 @@
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import corsOptions from './lib/corsOptions.ts'
 import { globalErrorHandler, notFoundHandler } from './middleware/error.ts'
 import appRouter from './router.ts'
-import cookieParser from 'cookie-parser'
 
 const app = express()
 

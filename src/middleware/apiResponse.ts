@@ -3,13 +3,15 @@ import { type Response } from 'express'
 export default function apiResponse<T extends unknown>(
   response: Response,
   statusCode: number,
-  { success, message, data = null }: TOptions<T>,
+  { data = null, ...rest }: TOptions<T>,
 ) {
-  return response.status(statusCode).json({ success, message, data })
+  return response.status(statusCode).json({ data, ...rest })
 }
 
 type TOptions<T extends unknown> = {
-  success: boolean
   message: string
+  error?: boolean
+  success?: boolean
   data?: T | null | undefined
+  [x: string]: unknown
 }
