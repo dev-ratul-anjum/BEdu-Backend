@@ -26,46 +26,46 @@ export type AggregateUser = {
 
 export type UserMinAggregateOutputType = {
   id: string | null
-  role: $Enums.Role | null
   username: string | null
   password: string | null
+  role: $Enums.Role | null
 }
 
 export type UserMaxAggregateOutputType = {
   id: string | null
-  role: $Enums.Role | null
   username: string | null
   password: string | null
+  role: $Enums.Role | null
 }
 
 export type UserCountAggregateOutputType = {
   id: number
-  role: number
   username: number
   password: number
+  role: number
   _all: number
 }
 
 
 export type UserMinAggregateInputType = {
   id?: true
-  role?: true
   username?: true
   password?: true
+  role?: true
 }
 
 export type UserMaxAggregateInputType = {
   id?: true
-  role?: true
   username?: true
   password?: true
+  role?: true
 }
 
 export type UserCountAggregateInputType = {
   id?: true
-  role?: true
   username?: true
   password?: true
+  role?: true
   _all?: true
 }
 
@@ -143,9 +143,9 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -171,9 +171,9 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
-  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   username?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   admin?: Prisma.XOR<Prisma.AdminNullableScalarRelationFilter, Prisma.AdminWhereInput> | null
   accountantProfile?: Prisma.XOR<Prisma.AccountantNullableScalarRelationFilter, Prisma.AccountantWhereInput> | null
   teacherProfile?: Prisma.XOR<Prisma.TeacherNullableScalarRelationFilter, Prisma.TeacherWhereInput> | null
@@ -184,9 +184,9 @@ export type UserWhereInput = {
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   username?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   admin?: Prisma.AdminOrderByWithRelationInput
   accountantProfile?: Prisma.AccountantOrderByWithRelationInput
   teacherProfile?: Prisma.TeacherOrderByWithRelationInput
@@ -201,8 +201,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
-  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   password?: Prisma.StringFilter<"User"> | string
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   admin?: Prisma.XOR<Prisma.AdminNullableScalarRelationFilter, Prisma.AdminWhereInput> | null
   accountantProfile?: Prisma.XOR<Prisma.AccountantNullableScalarRelationFilter, Prisma.AccountantWhereInput> | null
   teacherProfile?: Prisma.XOR<Prisma.TeacherNullableScalarRelationFilter, Prisma.TeacherWhereInput> | null
@@ -213,9 +213,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   username?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  role?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -226,16 +226,16 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
-  role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   username?: Prisma.StringWithAggregatesFilter<"User"> | string
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
+  role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
 }
 
 export type UserCreateInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherCreateNestedOneWithoutUserInput
@@ -246,9 +246,9 @@ export type UserCreateInput = {
 
 export type UserUncheckedCreateInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminUncheckedCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantUncheckedCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
@@ -259,9 +259,9 @@ export type UserUncheckedCreateInput = {
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUpdateOneWithoutUserNestedInput
@@ -272,9 +272,9 @@ export type UserUpdateInput = {
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUncheckedUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUncheckedUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
@@ -285,23 +285,23 @@ export type UserUncheckedUpdateInput = {
 
 export type UserCreateManyInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
 }
 
 export type UserScalarRelationFilter = {
@@ -311,23 +311,23 @@ export type UserScalarRelationFilter = {
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   username?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  role?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   username?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  role?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   username?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  role?: Prisma.SortOrder
 }
 
 export type UserCreateNestedOneWithoutNotificationsInput = {
@@ -420,9 +420,9 @@ export type EnumRoleFieldUpdateOperationsInput = {
 
 export type UserCreateWithoutNotificationsInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherCreateNestedOneWithoutUserInput
@@ -432,9 +432,9 @@ export type UserCreateWithoutNotificationsInput = {
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminUncheckedCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantUncheckedCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
@@ -460,9 +460,9 @@ export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
 
 export type UserUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUpdateOneWithoutUserNestedInput
@@ -472,9 +472,9 @@ export type UserUpdateWithoutNotificationsInput = {
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUncheckedUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUncheckedUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
@@ -484,9 +484,9 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
 
 export type UserCreateWithoutAccountantProfileInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherCreateNestedOneWithoutUserInput
   studentProfile?: Prisma.StudentCreateNestedOneWithoutUserInput
@@ -496,9 +496,9 @@ export type UserCreateWithoutAccountantProfileInput = {
 
 export type UserUncheckedCreateWithoutAccountantProfileInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminUncheckedCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
   studentProfile?: Prisma.StudentUncheckedCreateNestedOneWithoutUserInput
@@ -524,9 +524,9 @@ export type UserUpdateToOneWithWhereWithoutAccountantProfileInput = {
 
 export type UserUpdateWithoutAccountantProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUpdateOneWithoutUserNestedInput
   studentProfile?: Prisma.StudentUpdateOneWithoutUserNestedInput
@@ -536,9 +536,9 @@ export type UserUpdateWithoutAccountantProfileInput = {
 
 export type UserUncheckedUpdateWithoutAccountantProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUncheckedUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
   studentProfile?: Prisma.StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -548,9 +548,9 @@ export type UserUncheckedUpdateWithoutAccountantProfileInput = {
 
 export type UserCreateWithoutAdminInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   accountantProfile?: Prisma.AccountantCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherCreateNestedOneWithoutUserInput
   studentProfile?: Prisma.StudentCreateNestedOneWithoutUserInput
@@ -560,9 +560,9 @@ export type UserCreateWithoutAdminInput = {
 
 export type UserUncheckedCreateWithoutAdminInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   accountantProfile?: Prisma.AccountantUncheckedCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
   studentProfile?: Prisma.StudentUncheckedCreateNestedOneWithoutUserInput
@@ -588,9 +588,9 @@ export type UserUpdateToOneWithWhereWithoutAdminInput = {
 
 export type UserUpdateWithoutAdminInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   accountantProfile?: Prisma.AccountantUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUpdateOneWithoutUserNestedInput
   studentProfile?: Prisma.StudentUpdateOneWithoutUserNestedInput
@@ -600,9 +600,9 @@ export type UserUpdateWithoutAdminInput = {
 
 export type UserUncheckedUpdateWithoutAdminInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   accountantProfile?: Prisma.AccountantUncheckedUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
   studentProfile?: Prisma.StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -612,9 +612,9 @@ export type UserUncheckedUpdateWithoutAdminInput = {
 
 export type UserCreateWithoutParentProfileInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherCreateNestedOneWithoutUserInput
@@ -624,9 +624,9 @@ export type UserCreateWithoutParentProfileInput = {
 
 export type UserUncheckedCreateWithoutParentProfileInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminUncheckedCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantUncheckedCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
@@ -652,9 +652,9 @@ export type UserUpdateToOneWithWhereWithoutParentProfileInput = {
 
 export type UserUpdateWithoutParentProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUpdateOneWithoutUserNestedInput
@@ -664,9 +664,9 @@ export type UserUpdateWithoutParentProfileInput = {
 
 export type UserUncheckedUpdateWithoutParentProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUncheckedUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUncheckedUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
@@ -676,9 +676,9 @@ export type UserUncheckedUpdateWithoutParentProfileInput = {
 
 export type UserCreateWithoutStudentProfileInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherCreateNestedOneWithoutUserInput
@@ -688,9 +688,9 @@ export type UserCreateWithoutStudentProfileInput = {
 
 export type UserUncheckedCreateWithoutStudentProfileInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminUncheckedCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantUncheckedCreateNestedOneWithoutUserInput
   teacherProfile?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
@@ -716,9 +716,9 @@ export type UserUpdateToOneWithWhereWithoutStudentProfileInput = {
 
 export type UserUpdateWithoutStudentProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUpdateOneWithoutUserNestedInput
@@ -728,9 +728,9 @@ export type UserUpdateWithoutStudentProfileInput = {
 
 export type UserUncheckedUpdateWithoutStudentProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUncheckedUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUncheckedUpdateOneWithoutUserNestedInput
   teacherProfile?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
@@ -740,9 +740,9 @@ export type UserUncheckedUpdateWithoutStudentProfileInput = {
 
 export type UserCreateWithoutTeacherProfileInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantCreateNestedOneWithoutUserInput
   studentProfile?: Prisma.StudentCreateNestedOneWithoutUserInput
@@ -752,9 +752,9 @@ export type UserCreateWithoutTeacherProfileInput = {
 
 export type UserUncheckedCreateWithoutTeacherProfileInput = {
   id?: string
-  role: $Enums.Role
   username: string
   password: string
+  role: $Enums.Role
   admin?: Prisma.AdminUncheckedCreateNestedOneWithoutUserInput
   accountantProfile?: Prisma.AccountantUncheckedCreateNestedOneWithoutUserInput
   studentProfile?: Prisma.StudentUncheckedCreateNestedOneWithoutUserInput
@@ -780,9 +780,9 @@ export type UserUpdateToOneWithWhereWithoutTeacherProfileInput = {
 
 export type UserUpdateWithoutTeacherProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUpdateOneWithoutUserNestedInput
   studentProfile?: Prisma.StudentUpdateOneWithoutUserNestedInput
@@ -792,9 +792,9 @@ export type UserUpdateWithoutTeacherProfileInput = {
 
 export type UserUncheckedUpdateWithoutTeacherProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   admin?: Prisma.AdminUncheckedUpdateOneWithoutUserNestedInput
   accountantProfile?: Prisma.AccountantUncheckedUpdateOneWithoutUserNestedInput
   studentProfile?: Prisma.StudentUncheckedUpdateOneWithoutUserNestedInput
@@ -835,9 +835,9 @@ export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  role?: boolean
   username?: boolean
   password?: boolean
+  role?: boolean
   admin?: boolean | Prisma.User$adminArgs<ExtArgs>
   accountantProfile?: boolean | Prisma.User$accountantProfileArgs<ExtArgs>
   teacherProfile?: boolean | Prisma.User$teacherProfileArgs<ExtArgs>
@@ -849,26 +849,26 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  role?: boolean
   username?: boolean
   password?: boolean
+  role?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  role?: boolean
   username?: boolean
   password?: boolean
+  role?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
-  role?: boolean
   username?: boolean
   password?: boolean
+  role?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "role" | "username" | "password", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password" | "role", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.User$adminArgs<ExtArgs>
   accountantProfile?: boolean | Prisma.User$accountantProfileArgs<ExtArgs>
@@ -893,9 +893,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    role: $Enums.Role
     username: string
     password: string
+    role: $Enums.Role
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1326,9 +1326,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
-  readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly username: Prisma.FieldRef<"User", 'String'>
   readonly password: Prisma.FieldRef<"User", 'String'>
+  readonly role: Prisma.FieldRef<"User", 'Role'>
 }
     
 

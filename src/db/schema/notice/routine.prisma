@@ -10,11 +10,10 @@ model Routine {
   sectionId String
   section   Section @relation(fields: [sectionId], references: [id])
 
-  subjectId String
-  subject   Subject @relation(fields: [subjectId], references: [id])
-
   teacherId String
   teacher   Teacher @relation(fields: [teacherId], references: [id])
+
+  subjects Subject[]
 
   @@map("routines")
 }
