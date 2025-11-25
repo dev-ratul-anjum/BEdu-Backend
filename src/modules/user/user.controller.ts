@@ -1,52 +1,47 @@
-import { validateData } from '$/lib/validateData.ts'
-import apiResponse from '$/utils/apiResponse.ts'
-import { RequestHandler } from 'express'
-import { createUserSchema, loginUserSchema } from './user.schema.ts'
-import userService from './user.service.ts'
+import { validateData } from "$/lib/validateData.ts";
+import apiResponse from "$/utils/apiResponse.ts";
+import { RequestHandler } from "express";
+import { createUserSchema, loginUserSchema } from "./user.schema.ts";
+import userService from "./user.service.ts";
+import { createJwtToken, setAuthCookie } from "$/utils/authHelpers.ts";
 
 const userController = {
   register: async (req, res, next) => {
     try {
-      const data = validateData(createUserSchema, req.body)
+      const data = validateData(createUserSchema, req.body);
 
-
-      const newUser = await userService.register(data)
-
+      const newUser = await userService.register(data);
 
       return apiResponse(res, 200, {
         success: true,
-        message: 'User created successfully',
+        message: "User created successfully",
         data: newUser,
-      })
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
-  login : async (req, res, next) =>{
+  login: async (req, res, next) => {
     try {
-      const data = validateData(loginUserSchema, req.body)
+      const data = validateData(loginUserSchema, req.body);
 
-      const {user, token} = await userService.login(data)
+      const { user } = await userService.login(data);
 
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 1000,
-      })
+      const token = createJwtToken(user.id);
+      setAuthCookie(res, token);
 
       return apiResponse(res, 200, {
         success: true,
-        message: 'User logged in successfully',
+        message: "User logged in successfully",
         data: user,
-      })
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
   getList: async (req, res) => {},
   update: async (req, res) => {},
   delete: async (req, res) => {},
-} satisfies Record<string, RequestHandler>
+} satisfies Record<string, RequestHandler>;
 
-export default userController
+export default userController;
