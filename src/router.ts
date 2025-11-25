@@ -1,6 +1,6 @@
 import { Router } from 'express'
+import apiResponse from './middleware/apiResponse.ts'
 import userRouter from './modules/user/user.routes.ts'
-import apiResponse from './utils/apiResponse.ts'
 
 const appRouter = Router({ caseSensitive: true })
 

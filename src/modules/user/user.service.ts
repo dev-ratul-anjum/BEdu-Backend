@@ -1,7 +1,7 @@
-import { db } from "$/db/index.ts";
-import ApiError from "$/utils/ApiError.ts";
-import { TCreateUserSchema, TLoginUserSchema } from "./user.schema.ts";
-import bcrypt from "bcryptjs";
+import { db } from '$/db/index.ts'
+import { ApiError } from '$/middleware/error.ts'
+import bcrypt from 'bcryptjs'
+import { TCreateUserSchema, TLoginUserSchema } from './user.schema.ts'
 
 const userService = {
   register: async (data: TCreateUserSchema) => {
@@ -10,54 +10,55 @@ const userService = {
         where: {
           username: data.username,
         },
-      });
+      })
 
       if (user) {
-        throw new ApiError("User already exists", 409);
+        throw new ApiError('User already exists', 409)
       }
 
-      const hashedPassword = await bcrypt.hash(data.password, 10);
+      const hashedPassword = await bcrypt.hash(data.password, 10)
       const newUser = await db.user.create({
         data: {
           ...data,
           password: hashedPassword,
         },
-      });
+      })
 
-      return newUser;
+      return newUser
     } catch (error) {
-      throw error;
+      throw error
     }
   },
+
   login: async (data: TLoginUserSchema) => {
     try {
       const user = await db.user.findUnique({
         where: {
           username: data.username,
         },
-      });
+      })
 
       if (!user) {
-        throw new ApiError("User not found", 404);
+        throw new ApiError('User not found', 404)
       }
 
-      const isPasswordValid = await bcrypt.compare(
-        data.password,
-        user.password
-      );
+      const isPasswordValid = await bcrypt.compare(data.password, user.password)
 
       if (!isPasswordValid) {
-        throw new ApiError("Invalid password", 401);
+        throw new ApiError('Invalid password', 401)
       }
 
-      return { user };
+      return { user }
     } catch (error) {
-      throw error;
+      throw error
     }
   },
-  getList: () => {},
-  delete: () => {},
-  update: () => {},
-};
 
-export default userService;
+  getList: () => {},
+
+  delete: () => {},
+
+  update: () => {},
+}
+
+export default userService

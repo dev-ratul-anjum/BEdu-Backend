@@ -1,5 +1,5 @@
+import { ApiError } from '$/middleware/error.ts'
 import z from 'zod'
-import ApiError from '../utils/ApiError.ts'
 
 export function validateData<T extends z.ZodType<any, any>>(
   schema: T,
@@ -8,8 +8,9 @@ export function validateData<T extends z.ZodType<any, any>>(
   try {
     return schema.parse(data)
   } catch (err) {
-    if (err instanceof z.ZodError)
-      throw new ApiError(err.issues[0].message, 400)
+    if (err instanceof z.ZodError) {
+      throw new ApiError(err.issues[0].message, 400, err.stack)
+    }
 
     throw err
   }
