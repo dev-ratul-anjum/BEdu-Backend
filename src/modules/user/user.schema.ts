@@ -106,6 +106,6 @@ export type TCreateUserSchema = z.infer<typeof createUserSchema>;
 export const loginUserSchema = createUserSchema.pick({
   username: true,
   password: true,
-})
+});
 
 export type TLoginUserSchema = z.infer<typeof loginUserSchema>;
