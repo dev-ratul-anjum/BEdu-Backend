@@ -6,7 +6,7 @@ model Section {
   class    Class  @relation(fields: [class_id], references: [id])
 
   students Student[]
-  routine  Routine[]
+  routines Routine[]
 
   @@map("sections")
 }

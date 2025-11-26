@@ -4,16 +4,17 @@ model Routine {
   start_time DateTime
   end_time   DateTime
 
-  academic_year_id String
+  academic_year_id String       @unique
   academic_year    AcademicYear @relation(fields: [academic_year_id], references: [id])
 
-  section_id String
+  section_id String  @unique
   section    Section @relation(fields: [section_id], references: [id])
 
-  teacher_id String
+  teacher_id String  @unique
   teacher    Teacher @relation(fields: [teacher_id], references: [id])
 
-  subjects Subject[]
+  subject_id String  @unique
+  subject    Subject @relation(fields: [subject_id], references: [id])
 
   @@map("routines")
 }

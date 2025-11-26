@@ -40,12 +40,11 @@ export const uploadToCloudinary = (file: Express.Multer.File) => {
         .join("-") +
       "-" +
       Date.now();
-    const publicId = fileName + fileExt;
 
     const stream = cloudinary.uploader.upload_stream(
       {
         resource_type: "auto", // auto detect image/pdf
-        public_id: publicId,
+        public_id: fileName,
       },
       (error, result) => {
         if (error) reject(error);
