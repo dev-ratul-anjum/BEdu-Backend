@@ -16,5 +16,8 @@ model Routine {
   subject_id String  @unique
   subject    Subject @relation(fields: [subject_id], references: [id])
 
+  class_id String?
+  class    Class?  @relation(fields: [class_id], references: [id])
+
   @@map("routines")
 }

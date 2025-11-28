@@ -1,20 +1,20 @@
 import { validate_data } from "$/lib/validate_data.ts";
 import api_response from "$/middleware/api_response.ts";
+import { Api_error } from "$/middleware/error.ts";
+import { upload_multiple_to_cloudinary } from "$/utils/file_uploader.ts";
 import { RequestHandler } from "express";
 import { create_noticeboard_schema } from "./noticeboard.schema.ts";
 import noticeboard_service from "./noticeboard.service.ts";
-import { uploadMultipleToCloudinary } from "$/utils/fileUploader.ts";
-import { Api_Error } from "$/middleware/error.ts";
 
 const noticeboard_controller = {
   create: async (req, res, next) => {
     try {
       const files = req.files as Express.Multer.File[];
       if (!files || files.length === 0) {
-        throw new Api_Error("No files uploaded", 400);
+        throw new Api_error("No files uploaded", 400);
       }
 
-      const results = await uploadMultipleToCloudinary(files);
+      const results = await upload_multiple_to_cloudinary(files);
       const urls = results.map((r) => r.secure_url);
 
       const data = {

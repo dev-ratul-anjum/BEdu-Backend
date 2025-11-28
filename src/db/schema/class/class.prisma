@@ -13,6 +13,7 @@ model Class {
   sections Section[]
   students Student[]
   subjects Subject[]
+  routines Routine[]
   // feeStructures FeeStructure[] // Class wise fee alada hoy
 
   @@map("classes")

@@ -1,27 +1,27 @@
 // fileUploader.ts
-import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
+import multer, { memoryStorage } from "multer";
 import path from "path";
 
-const storage = multer.memoryStorage();
+const storage = memoryStorage();
 
 export const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // max 10MB per file
   fileFilter: (req, file, cb) => {
     console.log("file", file);
-    const allowedTypes = [
+    const allowed_types = [
       "image/png",
       "image/jpeg",
       "image/jpg",
       "application/pdf",
     ];
-    if (allowedTypes.includes(file.mimetype)) cb(null, true);
+    if (allowed_types.includes(file.mimetype)) cb(null, true);
     else cb(new Error("Only images and PDFs are allowed!"));
   },
 });
 
-export const uploadToCloudinary = (file: Express.Multer.File) => {
+export const upload_to_cloudinary = (file: Express.Multer.File) => {
   return new Promise<any>((resolve, reject) => {
     // Cloudinary config
     cloudinary.config({
@@ -31,10 +31,10 @@ export const uploadToCloudinary = (file: Express.Multer.File) => {
     });
 
     // Unique pretty filename
-    const fileExt = path.extname(file.originalname);
-    const fileName =
+    const file_ext = path.extname(file.originalname);
+    const file_name =
       file.originalname
-        .replace(fileExt, "")
+        .replace(file_ext, "")
         .toLowerCase()
         .split(" ")
         .join("-") +
@@ -44,7 +44,7 @@ export const uploadToCloudinary = (file: Express.Multer.File) => {
     const stream = cloudinary.uploader.upload_stream(
       {
         resource_type: "auto", // auto detect image/pdf
-        public_id: fileName,
+        public_id: file_name,
       },
       (error, result) => {
         if (error) reject(error);
@@ -56,14 +56,14 @@ export const uploadToCloudinary = (file: Express.Multer.File) => {
   });
 };
 
-export const uploadMultipleToCloudinary = async (
+export const upload_multiple_to_cloudinary = async (
   files: Express.Multer.File[]
 ) => {
-  return await Promise.all(files.map(uploadToCloudinary));
+  return await Promise.all(files.map(upload_to_cloudinary));
 };
 
-export const fileUploader = {
+export const file_uploader = {
   upload,
-  uploadToCloudinary,
-  uploadMultipleToCloudinary,
+  upload_to_cloudinary,
+  upload_multiple_to_cloudinary,
 };

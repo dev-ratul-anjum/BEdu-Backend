@@ -1,17 +1,17 @@
-import api_response from '$/middleware/api_response.ts'
-import { ErrorRequestHandler, RequestHandler } from 'express'
-import { ZodError } from 'zod'
+import api_response from "$/middleware/api_response.ts";
+import { ErrorRequestHandler, RequestHandler } from "express";
+import { ZodError } from "zod";
 
-export class Api_Error extends Error {
-  status_code: number
+export class Api_error extends Error {
+  status_code: number;
 
   constructor(message: string, status_code: number, stack?: string) {
-    super(message)
-    this.status_code = status_code
+    super(message);
+    this.status_code = status_code;
     if (stack) {
-      this.stack = stack
+      this.stack = stack;
     } else {
-      Error.captureStackTrace(this, this.constructor)
+      Error.captureStackTrace(this, this.constructor);
     }
   }
 }
@@ -19,47 +19,49 @@ export class Api_Error extends Error {
 export const not_found_handler: RequestHandler = (_req, res, next) => {
   return api_response(res, 404, {
     error: true,
-    message: 'Sorry, that page cannot be found!',
-  })
-}
+    message: "Sorry, that page cannot be found!",
+  });
+};
 
 export const global_error_handler: ErrorRequestHandler = async (
   error,
   req,
   res,
-  next,
+  next
 ) => {
-  process.env.NODE_ENV === 'development'
-    ? console.log('globalErrorHandler', error)
-    : console.log('Error from globalError', error)
+  process.env.NODE_ENV === "development"
+    ? console.log("globalErrorHandler", error)
+    : console.log("Error from globalError", error);
 
-  let status_code = 500
-  let message = 'Something went wrong'
-  let error_essages = []
-  let path = req.originalUrl // Capture the request path
+  let status_code = 500;
+  let message = "Something went wrong";
+  let error_essages = [];
+  let path = req.originalUrl; // Capture the request path
 
-  if (error?.name === 'ValidatorError') {
-    const simplifiedMessage = handle_validation_error(error)
-    status_code = simplifiedMessage?.status_code
-    message = simplifiedMessage?.message
-    error_essages = simplifiedMessage?.error_messages
+  if (error?.name === "ValidatorError") {
+    const simplified_message = handle_validation_error(error);
+    status_code = simplified_message?.status_code;
+    message = simplified_message?.message;
+    error_essages = simplified_message?.error_messages;
   } else if (error instanceof ZodError) {
-    const simplifiedError = handleZodError(error)
-    status_code = simplifiedError.status_code
-    message = simplifiedError.message
-    error_essages = simplifiedError.error_messages
-  } else if (error?.name === 'CastError') {
-    const simplifiedError = handle_cast_error(error)
-    status_code = simplifiedError.status_code
-    message = simplifiedError.message
-    error_essages = simplifiedError.error_messages
-  } else if (error instanceof Api_Error) {
-    status_code = error?.status_code || 500
-    message = error?.message || 'An error occurred'
-    error_essages = error?.message ? [{ path: '', message: message }] : []
+    const simplified_error = handle_zod_error(error);
+    status_code = simplified_error.status_code;
+    message = simplified_error.message;
+    error_essages = simplified_error.error_messages;
+  } else if (error?.name === "CastError") {
+    const simplified_error = handle_cast_error(error);
+    status_code = simplified_error.status_code;
+    message = simplified_error.message;
+    error_essages = simplified_error.error_messages;
+  } else if (error instanceof Api_error) {
+    status_code = error?.status_code || 500;
+    message = error?.message || "An error occurred";
+    error_essages = error?.message ? [{ path: "", message: message }] : [];
   } else if (error instanceof Error) {
-    message = error.message
-    error_essages = error?.message ? [{ path: '', message: error.message }] : []
+    message = error.message;
+    error_essages = error?.message
+      ? [{ path: "", message: error.message }]
+      : [];
   }
 
   return api_response(res, status_code, {
@@ -67,34 +69,34 @@ export const global_error_handler: ErrorRequestHandler = async (
     message,
     path,
     request_id: new Date().getTime(),
-  })
-}
+  });
+};
 
 const handle_validation_error = (err: any) => {
   const errors = Object.values(err.errors).map((element: any) => ({
     path: element?.path,
     message: element?.message,
-  }))
+  }));
 
   return {
     status_code: 400,
-    message: 'Validation Error',
+    message: "Validation Error",
     error_messages: errors,
-  }
-}
+  };
+};
 
-const handleZodError = (error: ZodError) => {
+const handle_zod_error = (error: ZodError) => {
   const errors = error.issues.map((issue) => ({
     path: issue?.path[issue.path.length - 1],
     message: issue?.message,
-  }))
+  }));
 
   return {
     status_code: 400,
-    message: 'Validation Error from handleZodError',
+    message: "Validation Error from handleZodError",
     error_messages: errors,
-  }
-}
+  };
+};
 
 const handle_cast_error = (error: any) => {
   const errors = [
@@ -102,11 +104,11 @@ const handle_cast_error = (error: any) => {
       path: error.path,
       message: error.message,
     },
-  ]
+  ];
 
   return {
     status_code: 400,
-    message: 'CastError',
+    message: "CastError",
     error_messages: errors,
-  }
-}
+  };
+};
