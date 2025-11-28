@@ -1,16 +1,16 @@
-import { requireAuth } from "$/middleware/auth.ts";
+import require_auth from "$/middleware/auth.ts";
 import { authorize_roles } from "$/utils/authorize_roles.ts";
-import express from "express";
+import { file_uploader } from "$/utils/file_uploader.ts";
+import { Router } from "express";
 import noticeboard_controller from "./noticeboard.controller.ts";
-import { fileUploader } from "$/utils/fileUploader.ts";
 
-const noticeboard_router = express.Router();
+const noticeboard_router = Router();
 
 noticeboard_router.post(
   "/create",
-  requireAuth,
+  require_auth,
   authorize_roles("ADMIN"),
-  fileUploader.upload.array("files"),
+  file_uploader.upload.array("files"),
   noticeboard_controller.create
 );
 

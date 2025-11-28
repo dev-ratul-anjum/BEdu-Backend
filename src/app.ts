@@ -6,7 +6,6 @@ import { global_error_handler, not_found_handler } from "./middleware/error.ts";
 import app_router from "./router.ts";
 
 const app = express();
-console.log(process.cwd());
 
 app.use(cors(cors_options));
 app.use(cookieParser(process.env.COOKIE_SECRET));
