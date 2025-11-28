@@ -2,7 +2,7 @@ import z from "zod";
 
 const env_schema = z.object({
   PORT: z.string(),
-  CORS_ORIGIN: z.string(),
+  CORS_ORIGINS: z.string(),
   DATABASE_URL: z.string(),
   JWT_SECRET: z.string(),
   COOKIE_SECRET: z.string(),
