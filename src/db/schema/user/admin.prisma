@@ -3,9 +3,9 @@ model Admin {
     name  String
     email String? @unique
 
-    userId String  @unique
-    user   User    @relation(fields: [userId], references: [id])
-    phone  Phone[]
+    user_id String  @unique
+    user    User    @relation(fields: [user_id], references: [id])
+    phone   Phone[]
 
     @@map("admins")
 }

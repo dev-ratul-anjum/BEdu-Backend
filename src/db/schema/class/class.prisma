@@ -2,12 +2,12 @@ model Class {
   id   String @id @default(uuid())
   name String // "Class 6", "Class 10"
 
-  academicYearId String
-  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academic_year_id String
+  academic_year    AcademicYear @relation(fields: [academic_year_id], references: [id])
 
   // Class Teacher (Optional)
-  classTeacherId String?
-  classTeacher   Teacher? @relation(fields: [classTeacherId], references: [id])
+  class_teacher_id String?
+  class_teacher    Teacher? @relation(fields: [class_teacher_id], references: [id])
 
   // Relations
   sections Section[]

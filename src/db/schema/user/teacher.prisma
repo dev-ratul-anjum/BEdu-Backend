@@ -1,16 +1,16 @@
 model Teacher {
-  id          String    @id @default(uuid())
-  name        String
-  email       String?   @unique
-  degree      String?
-  indexNumber String?
-  designation String?
-  joiningDate DateTime?
+  id           String    @id @default(uuid())
+  name         String
+  email        String?   @unique
+  degree       String?
+  index_number String?
+  designation  String?
+  joining_date DateTime?
 
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id])
 
-  classTeacherOf Class[]
+  class_teacher_of Class[]
 
   routines Routine[]
   phone    Phone[]

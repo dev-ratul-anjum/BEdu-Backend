@@ -2,16 +2,16 @@ import { Role } from "$/db/generated/enums.ts";
 import { z } from "zod";
 
 // --- Profile Schemas ---
-const adminProfileSchema = z.object({
+const admin_profile_Schema = z.object({
   name: z.string(),
-  email: z.string().email().optional(),
+  email: z.email().optional(),
 });
 
-const accountantProfileSchema = z.object({
+const accountant_profile_schema = z.object({
   name: z.string(),
 });
 
-const teacherProfileSchema = z.object({
+const teacher_profile_schema = z.object({
   name: z.string(),
   email: z.string().optional(),
   degree: z.string().optional(),
@@ -20,12 +20,12 @@ const teacherProfileSchema = z.object({
   joiningDate: z.string().optional(),
 });
 
-const parentProfileSchema = z.object({
+const parent_profile_schema = z.object({
   name: z.string(),
   email: z.string().email().optional(),
 });
 
-const studentProfileSchema = z.object({
+const student_profile_schema = z.object({
   name: z.string(),
   rollNo: z.number(),
   dateOfBirth: z.string().datetime(),
@@ -37,33 +37,32 @@ const studentProfileSchema = z.object({
 });
 
 // --- User Schema ---
-export const createUserSchema = z
+export const create_user_schema = z
   .object({
     username: z.string(),
     password: z.string(),
     role: z.custom<Role>(),
 
-    admin: adminProfileSchema.optional(),
-    accountantProfile: accountantProfileSchema.optional(),
-    teacherProfile: teacherProfileSchema.optional(),
-    studentProfile: studentProfileSchema.optional(),
-    parentProfile: parentProfileSchema.optional(),
+    admin_profile: admin_profile_Schema.optional(),
+    accountant_profile: accountant_profile_schema.optional(),
+    teacher_profile: teacher_profile_schema.optional(),
+    student_profile: student_profile_schema.optional(),
+    parent_profile: parent_profile_schema.optional(),
   })
   .superRefine((data, ctx) => {
     // Role → User model profile field mapping
-    const profileByRole = {
-      ADMIN: "admin",
-      ACCOUNTANT: "accountantProfile",
-      TEACHER: "teacherProfile",
-      PARENT: "parentProfile",
-      STUDENT: "studentProfile",
+    const profile_by_role = {
+      ADMIN: "admin_profile",
+      ACCOUNTANT: "accountant_profile",
+      TEACHER: "teacher_profile",
+      STUDENT: "student_profile",
+      PARENT: "parent_profile",
     } as const;
 
-    const requiredField =
-      profileByRole[data.role as keyof typeof profileByRole];
+    const required_field = profile_by_role[data.role];
 
     // Invalid role
-    if (!requiredField) {
+    if (!required_field) {
       ctx.addIssue({
         code: "custom",
         message: "Invalid role",
@@ -73,25 +72,25 @@ export const createUserSchema = z
     }
 
     // Required profile missing
-    if (!data[requiredField]) {
+    if (!data[required_field]) {
       ctx.addIssue({
         code: "custom",
-        message: `${requiredField} is required for role '${data.role}'`,
-        path: [requiredField],
+        message: `${required_field} is required for role '${data.role}'`,
+        path: [required_field],
       });
     }
 
     // Extra profiles forbidden
-    const allFields = [
-      "admin",
-      "accountantProfile",
-      "teacherProfile",
-      "studentProfile",
-      "parentProfile",
+    const all_fields = [
+      "admin_profile",
+      "accountant_profile",
+      "teacher_profile",
+      "student_profile",
+      "parent_profile",
     ] as const;
 
-    allFields.forEach((key) => {
-      if (key !== requiredField && data[key] != null) {
+    all_fields.forEach((key) => {
+      if (key !== required_field && data[key] != null) {
         ctx.addIssue({
           code: "custom",
           message: `${key} should not be provided for role '${data.role}'`,
@@ -101,11 +100,11 @@ export const createUserSchema = z
     });
   });
 
-export type TCreateUserSchema = z.infer<typeof createUserSchema>;
-
-export const loginUserSchema = createUserSchema.pick({
+export const login_user_schema = create_user_schema.pick({
   username: true,
   password: true,
 });
 
-export type TLoginUserSchema = z.infer<typeof loginUserSchema>;
+export type TCreate_user_schema = z.infer<typeof create_user_schema>;
+
+export type TLogin_user_schema = z.infer<typeof login_user_schema>;

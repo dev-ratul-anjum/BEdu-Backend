@@ -19,7 +19,10 @@ dist/
 .alchemy
 /.next/
 .vercel
+
+# Prisma
 **/generated/**
+**/migrations/**
 
 
 # deps

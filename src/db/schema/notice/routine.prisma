@@ -1,19 +1,20 @@
 model Routine {
-  id        String    @id @default(uuid())
-  day       DayOfWeek
-  startTime DateTime
-  endTime   DateTime
+  id         String    @id @default(uuid())
+  day        DayOfWeek
+  start_time DateTime
+  end_time   DateTime
 
-  academicYearId String
-  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academic_year_id String       @unique
+  academic_year    AcademicYear @relation(fields: [academic_year_id], references: [id])
 
-  sectionId String
-  section   Section @relation(fields: [sectionId], references: [id])
+  section_id String  @unique
+  section    Section @relation(fields: [section_id], references: [id])
 
-  teacherId String
-  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacher_id String  @unique
+  teacher    Teacher @relation(fields: [teacher_id], references: [id])
 
-  subjects Subject[]
+  subject_id String  @unique
+  subject    Subject @relation(fields: [subject_id], references: [id])
 
   @@map("routines")
 }

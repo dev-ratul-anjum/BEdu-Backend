@@ -1,93 +1,90 @@
-import { db } from "$/db/index.ts";
-import { ApiError } from "$/middleware/error.ts";
-import bcrypt from "bcryptjs";
-import { TCreateUserSchema, TLoginUserSchema } from "./user.schema.ts";
+import { Role } from '$/db/generated/enums.ts'
+import { db } from '$/db/index.ts'
+import { Api_Error } from '$/middleware/error.ts'
+import bcrypt from 'bcryptjs'
+import { TCreate_user_schema, TLogin_user_schema } from './user.schema.ts'
 
-const userService = {
-  register: async (data: TCreateUserSchema) => {
+const user_service = {
+  register: async (data: TCreate_user_schema) => {
     try {
       const user = await db.user.findUnique({
         where: {
           username: data.username,
         },
-      });
+      })
       if (user) {
-        throw new ApiError("User already exists", 409);
+        throw new Api_Error('User already exists', 409)
       }
-      const hashedPassword = await bcrypt.hash(data.password, 10);
+      const hashed_password = await bcrypt.hash(data.password, 10)
 
-      const newUser = await db.user.create({
+      const role_profile_map: Record<Role, string> = {
+        TEACHER: 'teacher_profile',
+        ADMIN: 'admin_profile',
+        ACCOUNTANT: 'accountant_profile',
+        STUDENT: 'student_profile',
+        PARENT: 'parent_profile',
+      }
+
+      const build_profile_payload = (role: Role, data: any) => {
+        const profile_key = role_profile_map[role]
+        if (!profile_key) return {}
+
+        return {
+          [profile_key]: {
+            create: data[profile_key],
+          },
+        }
+      }
+
+      const profile_payload = build_profile_payload(data.role, data)
+
+      const new_user = await db.user.create({
         data: {
           username: data.username,
-          password: hashedPassword,
+          password: hashed_password,
           role: data.role,
-          // nested create for relation
-          ...(data.role === "TEACHER" && {
-            teacherProfile: {
-              create: { ...data.teacherProfile },
-            },
-          }),
-          ...(data.role === "ADMIN" && {
-            admin: {
-              create: { ...data.admin },
-            },
-          }),
-          ...(data.role === "ACCOUNTANT" && {
-            accountant: {
-              create: { ...data.accountant },
-            },
-          }),
-          ...(data.role === "STUDENT" && {
-            student: {
-              create: { ...data.student },
-            },
-          }),
-          ...(data.role === "PARENT" && {
-            parent: {
-              create: { ...data.parent },
-            },
-          }),
+          ...profile_payload,
         },
-      });
+      })
 
-      return newUser;
+      return new_user
     } catch (error) {
-      throw error;
+      throw error
     }
   },
 
-  login: async (data: TLoginUserSchema) => {
+  login: async (data: TLogin_user_schema) => {
     try {
       const user = await db.user.findUnique({
         where: {
           username: data.username,
         },
-      });
+      })
 
       if (!user) {
-        throw new ApiError("User not found", 404);
+        throw new Api_Error('User not found', 404)
       }
 
-      const isPasswordValid = await bcrypt.compare(
+      const is_password_valid = await bcrypt.compare(
         data.password,
-        user.password
-      );
+        user.password,
+      )
 
-      if (!isPasswordValid) {
-        throw new ApiError("Invalid password", 401);
+      if (!is_password_valid) {
+        throw new Api_Error('Invalid password', 401)
       }
 
-      return { user };
+      return { user }
     } catch (error) {
-      throw error;
+      throw error
     }
   },
 
-  getList: () => {},
+  get_list: () => {},
 
   delete: () => {},
 
   update: () => {},
-};
+}
 
-export default userService;
+export default user_service

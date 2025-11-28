@@ -1,16 +1,14 @@
 model Attendance {
-  id       String           @id @default(uuid())
-  date     DateTime         @default(now()) // Only Date part matters
-  checkIn  DateTime         @default(now())
-  checkOut DateTime         @default(now())
-  status   AttendanceStatus
+  id        String           @id @default(uuid())
+  date      DateTime         @default(now()) // Only Date part matters
+  check_in  DateTime         @default(now())
+  check_out DateTime         @default(now())
+  status    AttendanceStatus
 
-  studentId String
-  student   Student @relation(fields: [studentId], references: [id])
+  student_id String
+  student    Student @relation(fields: [student_id], references: [id])
 
   remarks String? // "Late due to rain"
 
-  // Indexing is CRUCIAL here for speed
-  @@index([studentId, date])
   @@map("attendances")
 }

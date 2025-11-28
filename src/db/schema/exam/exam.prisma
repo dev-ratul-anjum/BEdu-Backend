@@ -1,11 +1,11 @@
 model Exam {
-  id        String   @id @default(uuid())
-  title     String // "Final Term 2024"
-  startDate DateTime
-  endDate   DateTime
+  id         String   @id @default(uuid())
+  title      String // "Final Term 2024"
+  start_date DateTime
+  end_date   DateTime
 
-  academicYearId String
-  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academic_year_id String
+  academic_year    AcademicYear @relation(fields: [academic_year_id], references: [id])
 
   results Result[]
 
