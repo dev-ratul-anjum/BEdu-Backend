@@ -1,4 +1,4 @@
-model Admin {
+model SuperAdmin {
     id    String  @id @default(uuid())
     name  String
     email String? @unique
@@ -7,5 +7,5 @@ model Admin {
     user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
     phone   Phone[]
 
-    @@map("admins")
+    @@map("super-admins")
 }

@@ -1,8 +1,8 @@
 import { Router } from "express";
-import api_response from "./middleware/api_response.ts";
-import user_router from "./modules/user/user.router.ts";
-import noticeboard_router from "./modules/noticeboard/noticeboard.router.ts";
-import routine_router from "./modules/routine_field/routine.routes.ts";
+import api_response from "./middleware/api_response.js";
+import user_router from "./modules/user/user.router.js";
+import notice_router from "./modules/notice/notice.router.js";
+// import routine_router from "./modules/routine/routine.routes.js";
 
 const app_router = Router({ caseSensitive: true });
 
@@ -14,7 +14,7 @@ app_router.all("/health-check", async (_req, res) => {
 });
 
 app_router.use("/user", user_router);
-app_router.use("/noticeboard", noticeboard_router);
-app_router.use("/routine", routine_router);
+app_router.use("/noticeboard", notice_router);
+// app_router.use("/routine", routine_router);
 
 export default app_router;

@@ -1,15 +1,14 @@
 model User {
-  id                 String      @id @default(uuid())
-  username           String      @unique
-  password           String
-  role               Role
-  admin_profile      Admin?
-  accountant_profile Accountant?
-  teacher_profile    Teacher?
-  student_profile    Student?
-  parent_profile     Parent?
+  id       String   @id @default(uuid())
+  username String   @unique
+  password String
+  role     UserRole
 
-  notifications Notification[]
+  admin_profile   Admin?
+  teacher_profile Teacher?
+  student_profile Student?
+  parent_profile  Parent?
+  superAdmin      SuperAdmin?
 
   @@map("users")
 }

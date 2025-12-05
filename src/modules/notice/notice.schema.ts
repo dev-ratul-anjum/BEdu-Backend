@@ -1,4 +1,4 @@
-import { Role } from "$/db/generated/enums.ts";
+import { UserRole } from "$/db/generated/enums.js";
 import { z } from "zod";
 
 export const create_noticeboard_schema = z.object({
@@ -7,7 +7,7 @@ export const create_noticeboard_schema = z.object({
     .array(z.string())
     .nonempty("Content must contain at least 1 file link"),
   target_roles: z
-    .array(z.custom<Role>())
+    .array(z.custom<UserRole>())
     .nonempty("At least one role is required"),
   is_archived: z.boolean().default(false),
 });

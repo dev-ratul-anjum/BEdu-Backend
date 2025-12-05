@@ -1,9 +1,10 @@
-import { User } from '$/db/generated/client.ts'
+import type { User } from "$/db/generated/client.ts";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: Pick<User, 'id' | 'role' | 'username'>
+      user?: Pick<User, "id" | "role" | "username">;
+      validatedBody?: any;
     }
   }
 }

@@ -9,9 +9,8 @@ export default function api_response<T extends unknown>(
 }
 
 type TOptions<T extends unknown> = {
+  success: boolean;
   message: string;
-  error?: boolean;
-  success?: boolean;
   data?: T | null | undefined;
   [x: string]: unknown;
 };

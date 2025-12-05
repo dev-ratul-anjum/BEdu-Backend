@@ -8,7 +8,7 @@ model Student {
   address       String?
 
   user_id String @unique
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   class_id String
   class    Class  @relation(fields: [class_id], references: [id])

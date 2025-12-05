@@ -1,17 +1,14 @@
-import { Api_error } from "$/middleware/error.ts";
-import z from "zod";
+import { NextFunction, Request, Response } from "express";
+import { ZodType } from "zod";
 
-export function validate_data<T extends z.ZodType<any, any>>(
-  schema: T,
-  data: z.infer<T>
-) {
-  try {
-    return schema.parse(data);
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      throw new Api_error(err.issues[0].message, 400, err.stack);
+const validate_data =
+  <T extends ZodType<any, any>>(schema: T) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      req.validatedBody = await schema.parseAsync(req.body);
+      next();
+    } catch (error) {
+      next(error);
     }
-
-    throw err;
-  }
-}
+  };
+export default validate_data;

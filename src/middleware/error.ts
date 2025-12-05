@@ -1,13 +1,21 @@
-import api_response from "$/middleware/api_response.ts";
-import { ErrorRequestHandler, RequestHandler } from "express";
+import e, { ErrorRequestHandler, RequestHandler } from "express";
 import { ZodError } from "zod";
+import api_response from "./api_response.js";
+import { Prisma } from "$/db/generated/client.js";
 
 export class Api_error extends Error {
   status_code: number;
+  path: string;
 
-  constructor(message: string, status_code: number, stack?: string) {
+  constructor(
+    message: string,
+    status_code: number,
+    path: string = "",
+    stack?: string
+  ) {
     super(message);
     this.status_code = status_code;
+    this.path = path;
     if (stack) {
       this.stack = stack;
     } else {
@@ -18,7 +26,7 @@ export class Api_error extends Error {
 
 export const not_found_handler: RequestHandler = (_req, res, next) => {
   return api_response(res, 404, {
-    error: true,
+    success: false,
     message: "Sorry, that page cannot be found!",
   });
 };
@@ -29,86 +37,82 @@ export const global_error_handler: ErrorRequestHandler = async (
   res,
   next
 ) => {
-  process.env.NODE_ENV === "development"
-    ? console.log("globalErrorHandler", error)
-    : console.log("Error from globalError", error);
-
   let status_code = 500;
-  let message = "Something went wrong";
-  let error_essages = [];
+  let message =
+    error.message || "Something went wrong. Please try again later.";
+  let errors = error;
   let path = req.originalUrl; // Capture the request path
 
-  if (error?.name === "ValidatorError") {
-    const simplified_message = handle_validation_error(error);
-    status_code = simplified_message?.status_code;
-    message = simplified_message?.message;
-    error_essages = simplified_message?.error_messages;
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    switch (error.code) {
+      case "P2002": // Unique constraint
+        status_code = 409;
+        message = "Duplicate value violates a unique constraint";
+        errors = [
+          {
+            path: (error.meta?.target as string[] | undefined)?.[0] || "",
+            message,
+          },
+        ];
+        break;
+
+      case "P2003": // Foreign key
+        status_code = 400;
+        message = "Foreign key constraint violation";
+        errors = [
+          {
+            path: (error.meta?.target as string[] | undefined)?.[0] || "",
+            message,
+          },
+        ];
+        break;
+
+      case "P1000": // Auth fail
+        status_code = 500;
+        message = "Database authentication failed";
+        errors = [{ path: "", message }];
+        break;
+
+      default:
+        status_code = 400;
+        message = error.message;
+        errors = [{ path: "", message }];
+        break;
+    }
+  } else if (error instanceof Prisma.PrismaClientValidationError) {
+    status_code = 400;
+    message = "Prisma query validation error";
+    errors = [{ path: "", message: error.message }];
+  } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+    status_code = 500;
+    message = "Unknown error occurred in Prisma";
+    errors = [{ path: "", message: error.message }];
+  } else if (error instanceof Prisma.PrismaClientInitializationError) {
+    status_code = 500;
+    message = "Prisma client failed to initialize";
+    errors = [{ path: "", message: error.message }];
   } else if (error instanceof ZodError) {
-    const simplified_error = handle_zod_error(error);
-    status_code = simplified_error.status_code;
-    message = simplified_error.message;
-    error_essages = simplified_error.error_messages;
-  } else if (error?.name === "CastError") {
-    const simplified_error = handle_cast_error(error);
-    status_code = simplified_error.status_code;
-    message = simplified_error.message;
-    error_essages = simplified_error.error_messages;
+    status_code = 400;
+    message = "Input validation failed";
+    errors = error.issues.map((issue) => ({
+      path: issue.path[issue.path.length - 1] || "",
+      message: issue.message,
+    }));
   } else if (error instanceof Api_error) {
-    status_code = error?.status_code || 500;
-    message = error?.message || "An error occurred";
-    error_essages = error?.message ? [{ path: "", message: message }] : [];
-  } else if (error instanceof Error) {
+    status_code = error.status_code;
     message = error.message;
-    error_essages = error?.message
-      ? [{ path: "", message: error.message }]
-      : [];
+    errors = [{ path: error.path, message }];
+  } else if (error instanceof Error) {
+    status_code = 500;
+    message = error.message;
+    errors = [{ path: "", message }];
   }
 
   return api_response(res, status_code, {
-    error: true,
+    success: false,
     message,
+    errors,
     path,
     request_id: new Date().getTime(),
   });
-};
-
-const handle_validation_error = (err: any) => {
-  const errors = Object.values(err.errors).map((element: any) => ({
-    path: element?.path,
-    message: element?.message,
-  }));
-
-  return {
-    status_code: 400,
-    message: "Validation Error",
-    error_messages: errors,
-  };
-};
-
-const handle_zod_error = (error: ZodError) => {
-  const errors = error.issues.map((issue) => ({
-    path: issue?.path[issue.path.length - 1],
-    message: issue?.message,
-  }));
-
-  return {
-    status_code: 400,
-    message: "Validation Error from handleZodError",
-    error_messages: errors,
-  };
-};
-
-const handle_cast_error = (error: any) => {
-  const errors = [
-    {
-      path: error.path,
-      message: error.message,
-    },
-  ];
-
-  return {
-    status_code: 400,
-    message: "CastError",
-    error_messages: errors,
-  };
 };

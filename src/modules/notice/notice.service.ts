@@ -1,7 +1,7 @@
-import { db } from "$/db/index.ts";
-import { TCreate_noticeboard_schema } from "./noticeboard.schema.ts";
+import { db } from "$/db/index.js";
+import { TCreate_noticeboard_schema } from "./notice.schema.js";
 
-const noticeboard_service = {
+const notice_service = {
   create: async (data: TCreate_noticeboard_schema) => {
     try {
       const new_noticeboard = await db.noticeBoard.create({
@@ -16,4 +16,4 @@ const noticeboard_service = {
   delete: () => {},
 };
 
-export default noticeboard_service;
+export default notice_service;

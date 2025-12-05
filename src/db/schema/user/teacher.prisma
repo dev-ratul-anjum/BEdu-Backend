@@ -8,7 +8,7 @@ model Teacher {
   joining_date DateTime?
 
   user_id String @unique
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   class_teacher_of Class[]
 
