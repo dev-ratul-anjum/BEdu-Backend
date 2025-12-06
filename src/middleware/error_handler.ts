@@ -40,7 +40,7 @@ export const global_error_handler: ErrorRequestHandler = async (
   let status_code = 500;
   let message =
     error.message || "Something went wrong. Please try again later.";
-  let errors = error;
+  let errors = null;
   let path = req.originalUrl; // Capture the request path
 
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -50,7 +50,8 @@ export const global_error_handler: ErrorRequestHandler = async (
         message = "Duplicate value violates a unique constraint";
         errors = [
           {
-            path: (error.meta?.target as string[] | undefined)?.[0] || "",
+            path:
+              (error.meta?.target as string[] | undefined)?.[0] || "general",
             message,
           },
         ];
@@ -61,7 +62,8 @@ export const global_error_handler: ErrorRequestHandler = async (
         message = "Foreign key constraint violation";
         errors = [
           {
-            path: (error.meta?.target as string[] | undefined)?.[0] || "",
+            path:
+              (error.meta?.target as string[] | undefined)?.[0] || "general",
             message,
           },
         ];
@@ -70,48 +72,46 @@ export const global_error_handler: ErrorRequestHandler = async (
       case "P1000": // Auth fail
         status_code = 500;
         message = "Database authentication failed";
-        errors = [{ path: "", message }];
+        errors = [{ path: "general", message }];
         break;
 
       default:
         status_code = 400;
         message = error.message;
-        errors = [{ path: "", message }];
+        errors = [{ path: "general", message }];
         break;
     }
   } else if (error instanceof Prisma.PrismaClientValidationError) {
     status_code = 400;
     message = "Prisma query validation error";
-    errors = [{ path: "", message: error.message }];
   } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
     status_code = 500;
     message = "Unknown error occurred in Prisma";
-    errors = [{ path: "", message: error.message }];
   } else if (error instanceof Prisma.PrismaClientInitializationError) {
     status_code = 500;
     message = "Prisma client failed to initialize";
-    errors = [{ path: "", message: error.message }];
   } else if (error instanceof ZodError) {
     status_code = 400;
     message = "Input validation failed";
     errors = error.issues.map((issue) => ({
-      path: issue.path[issue.path.length - 1] || "",
+      path: issue.path[issue.path.length - 1] || "general",
       message: issue.message,
     }));
   } else if (error instanceof Api_error) {
     status_code = error.status_code;
     message = error.message;
-    errors = [{ path: error.path, message }];
+    if (error.path) {
+      errors = [{ path: error.path, message }];
+    }
   } else if (error instanceof Error) {
     status_code = 500;
     message = error.message;
-    errors = [{ path: "", message }];
   }
 
   return api_response(res, status_code, {
     success: false,
     message,
-    errors,
+    ...(errors ? { errors } : {}),
     path,
     request_id: new Date().getTime(),
   });

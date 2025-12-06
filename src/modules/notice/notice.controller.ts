@@ -1,6 +1,6 @@
 // import { validate_data } from "$/lib/validate_data.js";
 import api_response from "$/middleware/api_response.js";
-import { Api_error } from "$/middleware/error.js";
+import { Api_error } from "$/middleware/error_handler.js";
 import { upload_multiple_to_cloudinary } from "$/utils/file_uploader.js";
 import { NextFunction, Request, Response } from "express";
 import { create_noticeboard_schema } from "./notice.schema.js";

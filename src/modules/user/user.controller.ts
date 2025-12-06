@@ -27,20 +27,83 @@ const create_user = catch_async(
   }
 );
 
+// Update User Info
 const update_user = catch_async(
   async (req: Request, res: Response, next: NextFunction) => {
     return api_response(res, 200, {
       success: true,
-      message: "User deleted successfully!",
+      message: "User updated successfully!",
     });
   }
 );
 
-const update_user_role = catch_async(
+// Update User Info By Admin
+const update_user_by_admin = catch_async(
   async (req: Request, res: Response, next: NextFunction) => {
+    const update_user = await user_service.update_user_by_admin(
+      req.user!,
+      req.validatedBody
+    );
     return api_response(res, 200, {
       success: true,
-      message: "User deleted successfully!",
+      message: "User updated successfully!",
+      data: update_user,
+    });
+  }
+);
+
+const all_students_list = catch_async(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const all_students = await user_service.all_students_list();
+
+    return api_response(res, 200, {
+      success: true,
+      message: "Student List retrive successfully.",
+      data: all_students,
+    });
+  }
+);
+const all_teachers_list = catch_async(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const all_teachers = await user_service.all_teachers_list();
+
+    return api_response(res, 200, {
+      success: true,
+      message: "Teacher List retrive successfully.",
+      data: all_teachers,
+    });
+  }
+);
+const all_parents_list = catch_async(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const all_parents = await user_service.all_parents_list();
+
+    return api_response(res, 200, {
+      success: true,
+      message: "Parent List retrive successfully.",
+      data: all_parents,
+    });
+  }
+);
+const all_admins_list = catch_async(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const all_admins = await user_service.all_admins_list();
+
+    return api_response(res, 200, {
+      success: true,
+      message: "Admin List retrive successfully.",
+      data: all_admins,
+    });
+  }
+);
+const all_super_admins_list = catch_async(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const all_super_admins = await user_service.all_super_admins_list();
+
+    return api_response(res, 200, {
+      success: true,
+      message: "Super admin List retrive successfully.",
+      data: all_super_admins,
     });
   }
 );
@@ -100,7 +163,12 @@ const logout_user = (req: Request, res: Response) => {
 const user_controller = {
   create_user,
   update_user,
-  update_user_role,
+  update_user_by_admin,
+  all_students_list,
+  all_teachers_list,
+  all_parents_list,
+  all_admins_list,
+  all_super_admins_list,
   delete_user,
   login_user,
   get_current_user,

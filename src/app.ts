@@ -2,7 +2,10 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import cors_options from "./lib/cors_options.js";
-import { global_error_handler, not_found_handler } from "./middleware/error.js";
+import {
+  global_error_handler,
+  not_found_handler,
+} from "./middleware/error_handler.js";
 import app_router from "./router.js";
 
 const app = express();

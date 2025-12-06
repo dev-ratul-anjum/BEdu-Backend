@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { Api_error } from "./error.js";
+import { Api_error } from "./error_handler.js";
 import { db } from "../db/index.js";
 import { UserRole } from "$/db/generated/enums.js";
 

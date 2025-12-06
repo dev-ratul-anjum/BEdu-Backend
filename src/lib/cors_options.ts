@@ -1,4 +1,4 @@
-import { Api_error } from "$/middleware/error.js";
+import { Api_error } from "$/middleware/error_handler.js";
 import { CorsOptions } from "cors";
 
 const origins = process.env.CORS_ORIGINS?.split(",").map((o) => o.trim()) || [];
