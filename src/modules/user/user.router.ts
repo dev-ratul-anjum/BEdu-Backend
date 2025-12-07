@@ -1,6 +1,6 @@
 import { Router } from "express";
 import check_auth from "$/middleware/auth.js";
-import validate_data from "$/lib/validate_data.js";
+import validate_data from "$/middleware/validate_data.js";
 import {
   create_user_schema,
   login_user_schema,

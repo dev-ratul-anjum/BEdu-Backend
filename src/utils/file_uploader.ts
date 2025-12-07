@@ -9,7 +9,6 @@ export const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // max 10MB per file
   fileFilter: (req, file, cb) => {
-    console.log("file", file);
     const allowed_types = [
       "image/png",
       "image/jpeg",
