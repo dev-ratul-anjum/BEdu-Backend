@@ -6,10 +6,8 @@ model Subject {
   class_id String
   class    Class  @relation(fields: [class_id], references: [id])
 
-  routine_id String
-
-  results  Result[]
-  routines Routine[]
+  results         Result[]
+  routine_entries RoutineEntry[]
 
   @@map("subjects")
 }

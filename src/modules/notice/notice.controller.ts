@@ -22,7 +22,7 @@ const create_notice = catch_async(
     const data = {
       ...req.validatedBody,
       target_roles: JSON.parse(req.validatedBody.target_roles),
-      content: urls,
+      attachments: urls,
     };
 
     const new_notice = await notice_service.create_notice(data);

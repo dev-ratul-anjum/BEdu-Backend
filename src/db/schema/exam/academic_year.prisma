@@ -5,9 +5,9 @@ model AcademicYear {
   end_date   DateTime
   is_current Boolean  @default(false)
 
-  classes  Class[]
-  exams    Exam[]
-  routines Routine[]
+  classes         Class[]
+  exams           Exam[]
+  routine_entries RoutineEntry[]
 
   @@map("academic_years")
 }

@@ -12,8 +12,8 @@ model Teacher {
 
   class_teacher_of Class[]
 
-  routines Routine[]
-  phone    Phone[]
+  routine_entries RoutineEntry[]
+  phone           Phone[]
 
   @@map("teachers")
 }

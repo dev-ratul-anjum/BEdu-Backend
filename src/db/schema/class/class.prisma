@@ -10,11 +10,10 @@ model Class {
   class_teacher    Teacher? @relation(fields: [class_teacher_id], references: [id])
 
   // Relations
-  sections Section[]
-  students Student[]
-  subjects Subject[]
-  routines Routine[]
-  // feeStructures FeeStructure[] // Class wise fee alada hoy
+  sections        Section[]
+  students        Student[]
+  subjects        Subject[]
+  routine_entries RoutineEntry[]
 
   @@map("classes")
 }

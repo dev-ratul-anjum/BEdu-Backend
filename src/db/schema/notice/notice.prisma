@@ -1,7 +1,8 @@
 model Notice {
   id           String     @id @default(uuid())
   title        String
-  content      String[]
+  content      String?
+  attachments  String[]
   target_roles UserRole[] // Array of roles: ["STUDENT", "TEACHER"]
   is_archived  Boolean    @default(false)
   is_published Boolean    @default(false)

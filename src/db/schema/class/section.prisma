@@ -5,8 +5,8 @@ model Section {
   class_id String
   class    Class  @relation(fields: [class_id], references: [id])
 
-  students Student[]
-  routines Routine[]
+  students        Student[]
+  routine_entries RoutineEntry[]
 
   @@map("sections")
 }
