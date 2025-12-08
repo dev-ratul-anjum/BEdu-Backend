@@ -17,6 +17,34 @@ const create_routine_entry = catch_async(
   }
 );
 
+const get_section_routine_entries = catch_async(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const section_id = req.params.section_id;
+    const section_routine_entries =
+      await routine_entry_service.get_section_routine_entries(section_id);
+
+    return api_response(res, 201, {
+      success: true,
+      message: "Routine entry List for section retrive successfully",
+      data: section_routine_entries,
+    });
+  }
+);
+
+const get_teacher_routine_entries = catch_async(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const teacher_id = req.params.teacher_id;
+    const all_routine_entry =
+      await routine_entry_service.get_teacher_routine_entries(teacher_id);
+
+    return api_response(res, 201, {
+      success: true,
+      message: "Routine entry List for teacher retrive successfully",
+      data: all_routine_entry,
+    });
+  }
+);
+
 const all_routine_entry_list = catch_async(
   async (req: Request, res: Response, next: NextFunction) => {
     const all_routine_entry =
@@ -62,6 +90,8 @@ const delete_routine_entry = catch_async(
 
 export const routine_entry_controller = {
   create_routine_entry,
+  get_section_routine_entries,
+  get_teacher_routine_entries,
   all_routine_entry_list,
   update_routine_entry,
   delete_routine_entry,

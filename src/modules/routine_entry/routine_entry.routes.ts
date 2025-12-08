@@ -9,7 +9,7 @@ import { routine_entry_controller } from "./routine_entry.controller.js";
 
 const routine_entry_router = Router();
 
-// Crate Academic Year
+// Crate routine entry
 routine_entry_router.post(
   "/create",
   check_auth(["SUPER_ADMIN"]),
@@ -17,14 +17,28 @@ routine_entry_router.post(
   routine_entry_controller.create_routine_entry
 );
 
-// Get All Academic Years
+// Get section routine entries
+routine_entry_router.get(
+  "/section/:section_id",
+  check_auth(["SUPER_ADMIN", "STUDENT"]),
+  routine_entry_controller.get_section_routine_entries
+);
+
+// Get teacher routine entries
+routine_entry_router.get(
+  "/teacher/teacher_id",
+  check_auth(["SUPER_ADMIN", "TEACHER"]),
+  routine_entry_controller.get_teacher_routine_entries
+);
+
+// Get All routine entry
 routine_entry_router.get(
   "/all",
   check_auth(["SUPER_ADMIN"]),
   routine_entry_controller.all_routine_entry_list
 );
 
-// Update Academic Year
+// Update routine entry
 routine_entry_router.patch(
   "/update/:routine_entry_id",
   check_auth(["SUPER_ADMIN"]),
@@ -32,7 +46,7 @@ routine_entry_router.patch(
   routine_entry_controller.update_routine_entry
 );
 
-// Delete Academic Year
+// Delete routine entry
 routine_entry_router.delete(
   "/delete/:routine_entry_id",
   check_auth(["SUPER_ADMIN"]),
