@@ -58,10 +58,27 @@ export const create_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
     const profile = payload.student_profile;
 
     const existing_roll = await tx.student.findUnique({
-      where: { roll_no: profile.roll_no },
+      where: { roll_no: profile.roll_no, section_id: profile.section_id },
     });
 
     if (existing_roll) throw new Api_error("Roll already in use", 409, "roll");
+
+    const section = await tx.section.findUnique({
+      where: { id: profile.section_id },
+    });
+
+    if (!section)
+      throw new Api_error(
+        "Requested section does not exist",
+        404,
+        "section_id"
+      );
+    if (section.class_id !== profile.class_id)
+      throw new Api_error(
+        "This section is not available for the selected class.",
+        404,
+        "section_id"
+      );
 
     return tx.student.create({
       data: {
@@ -83,7 +100,7 @@ export const create_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
 export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
   SUPER_ADMIN: async (tx, user, payload) => {
     const profile = payload.super_admin_profile;
-    if (profile) {
+    if (profile && Object.keys(profile).length > 0) {
       if (profile.email) {
         const existing_email = await tx.superAdmin.findUnique({
           where: { email: profile.email },
@@ -103,7 +120,7 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
   ADMIN: async (tx, user, payload) => {
     const profile = payload.admin_profile;
 
-    if (profile) {
+    if (profile && Object.keys(profile).length > 0) {
       if (profile.email) {
         const existing_email = await tx.admin.findUnique({
           where: { email: profile.email },
@@ -120,7 +137,7 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
   },
   TEACHER: async (tx, user, payload) => {
     const profile = payload.teacher_profile;
-    if (profile) {
+    if (profile && Object.keys(profile).length > 0) {
       if (profile.email) {
         const existing_email = await tx.teacher.findUnique({
           where: { email: profile.email },
@@ -137,13 +154,48 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
   STUDENT: async (tx, user, payload) => {
     const profile = payload.student_profile;
 
-    if (profile) {
-      const existing_roll = await tx.student.findUnique({
-        where: { roll_no: profile.roll_no },
+    if (profile && Object.keys(profile).length > 0) {
+      const student_profile = await tx.student.findUnique({
+        where: { user_id: user.id },
       });
+      if (!student_profile) {
+        throw new Api_error("Requested student does not exist", 404);
+      }
 
-      if (existing_roll)
-        throw new Api_error("Roll already in use", 409, "roll");
+      if (profile.roll_no) {
+        const existing_roll = await tx.student.findUnique({
+          where: { roll_no: profile.roll_no, section_id: profile.section_id },
+        });
+
+        if (existing_roll)
+          throw new Api_error("Roll already in use", 409, "roll");
+      }
+
+      if (profile.section_id || profile.class_id) {
+        const class_id = profile.class_id
+          ? profile.class_id
+          : student_profile.class_id;
+        const section_id = profile.section_id
+          ? profile.section_id
+          : student_profile.section_id;
+
+        const section = await tx.section.findUnique({
+          where: { id: section_id },
+        });
+
+        if (!section)
+          throw new Api_error(
+            "Requested section does not exist",
+            404,
+            "section_id"
+          );
+        if (section.class_id !== class_id)
+          throw new Api_error(
+            "This section is not available for the selected class.",
+            404,
+            "section_id"
+          );
+      }
 
       return tx.student.update({
         where: { user_id: user.id },
@@ -153,7 +205,7 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
   },
   PARENT: async (tx, user, payload) => {
     const profile = payload.parent_profile;
-    if (profile) {
+    if (profile && Object.keys(profile).length > 0) {
       return tx.parent.update({
         where: { user_id: user.id },
         data: profile,

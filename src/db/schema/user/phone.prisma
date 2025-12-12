@@ -1,16 +1,16 @@
 model Phone {
-    id     String @id @default(uuid())
-    number String @unique
+    id     String  @id @default(uuid())
+    name   String?
+    number String  @unique
 
-    parent    Parent? @relation(fields: [parent_id], references: [id])
-    parent_id String?
-
-    teacher      Teacher?    @relation(fields: [teacher_id], references: [id])
-    teacher_id   String?
-    admin        Admin?      @relation(fields: [adminId], references: [id])
-    adminId      String?
-    superAdmin   SuperAdmin? @relation(fields: [superAdminId], references: [id])
-    superAdminId String?
+    parent_id      String?
+    parent         Parent?     @relation(fields: [parent_id], references: [id])
+    teacher        Teacher?    @relation(fields: [teacher_id], references: [id])
+    teacher_id     String?
+    admin          Admin?      @relation(fields: [admin_id], references: [id])
+    admin_id       String?
+    super_admin    SuperAdmin? @relation(fields: [super_admin_id], references: [id])
+    super_admin_id String?
 
     @@map("phones")
 }

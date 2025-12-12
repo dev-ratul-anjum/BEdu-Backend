@@ -47,21 +47,36 @@ const create_user = async (data: TCreate_user_schema) => {
 
 const update_user = async () => {};
 const update_user_by_admin = async (
-  user: { id: string; username: string; role: string },
+  user_id: string,
   data: TUpdate_user_schema
 ) => {
   const updated_info = await db.$transaction(async (tx) => {
+    const user = await tx.user.findUnique({ where: { id: user_id } });
+    if (!user) throw new Api_error("Requested user does not exist", 404);
+
     const user_data: any = {};
     if (data.username) user_data.username = data.username;
     if (data.password) user_data.password = data.password;
     if (data.role) user_data.role = data.role;
 
-    const updated_user = await tx.user.update({
-      where: {
-        id: user.id,
-      },
-      data: user_data,
-    });
+    let updated_user = user;
+    if (Object.keys(user_data).length > 0) {
+      if (user_data.username) {
+        const existing_username = await tx.user.findUnique({
+          where: { username: user_data.username },
+        });
+
+        if (existing_username)
+          throw new Api_error("Username already in use", 409, "username");
+      }
+
+      updated_user = await tx.user.update({
+        where: {
+          id: user.id,
+        },
+        data: user_data,
+      });
+    }
 
     if (data.role) {
       const prev_role = user.role;
@@ -71,19 +86,19 @@ const update_user_by_admin = async (
 
         switch (prev_role) {
           case "SUPER_ADMIN":
-            await tx.superAdmin.delete({ where: { user_id: user.id } });
+            await tx.superAdmin.delete({ where: { user_id } });
             break;
           case "ADMIN":
-            await tx.admin.delete({ where: { user_id: user.id } });
+            await tx.admin.delete({ where: { user_id } });
             break;
           case "TEACHER":
-            await tx.teacher.delete({ where: { user_id: user.id } });
+            await tx.teacher.delete({ where: { user_id } });
             break;
           case "STUDENT":
-            await tx.student.delete({ where: { user_id: user.id } });
+            await tx.student.delete({ where: { user_id } });
             break;
           case "PARENT":
-            await tx.parent.delete({ where: { user_id: user.id } });
+            await tx.parent.delete({ where: { user_id } });
             break;
           default:
             break;
@@ -210,10 +225,32 @@ const all_super_admins_list = async () => {
   return super_admins;
 };
 
+const all_users_list = async (query: { role?: UserRole }) => {
+  const { role } = query;
+
+  if (!role) {
+    throw new Api_error("Role is required to fetch users", 400);
+  }
+  const allowedRoles = ["STUDENT", "TEACHER", "ADMIN", "PARENT", "SUPER_ADMIN"];
+  if (!allowedRoles.includes(role)) {
+    throw new Api_error(
+      `Invalid role. Allowed roles are: ${allowedRoles.join(", ")}`,
+      400
+    );
+  }
+  const all_users = await db.user.findMany({
+    where: { role },
+    select: { id: true, username: true, role: true },
+  });
+
+  return all_users;
+};
+
 const user_service = {
   create_user,
   login_user,
   update_user,
+  all_users_list,
   all_students_list,
   all_teachers_list,
   all_parents_list,

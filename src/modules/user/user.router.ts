@@ -22,19 +22,24 @@ user_router.post(
 user_router.patch(
   "/update",
   check_auth(),
-  validate_data(login_user_schema),
+  validate_data(update_user_schema),
   user_controller.login_user
 );
 
 // Update User Info By Admin
 user_router.patch(
-  "/update/by-admin",
+  "/update/by-admin/:user_id",
   check_auth(["SUPER_ADMIN"]),
   validate_data(update_user_schema),
   user_controller.update_user_by_admin
 );
 
 // List of Users
+user_router.get(
+  "/all",
+  check_auth(["SUPER_ADMIN"]),
+  user_controller.all_users_list
+);
 user_router.get(
   "/all/students",
   check_auth(["SUPER_ADMIN"]),
@@ -63,7 +68,7 @@ user_router.get(
 
 // Delete Any User
 user_router.delete(
-  "/delete",
+  "/delete/:user_id",
   check_auth(["SUPER_ADMIN"]),
   user_controller.delete_user
 );

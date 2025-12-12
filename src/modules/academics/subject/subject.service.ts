@@ -6,9 +6,23 @@ import {
 } from "./subject.schema.js";
 
 const create_subject = async (data: TCreate_subject_schema) => {
+  console.log("create subject");
+  console.log("data", data);
+  const exist_class = await db.class.findUnique({
+    where: { id: data.class_id },
+  });
+  console.log("create subject2");
+
+  if (!exist_class) {
+    throw new Api_error("Requested subject does not exist", 404, "class_id");
+  }
+  console.log("create subject 3");
+
   const new_subject = await db.subject.create({
     data: data,
   });
+  console.log("create subject 4");
+
   return new_subject;
 };
 

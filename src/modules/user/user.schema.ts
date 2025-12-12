@@ -17,7 +17,7 @@ const teacher_profile_schema = z.object({
   degree: z.string().optional(),
   index_number: z.string().optional(),
   designation: z.string().optional(),
-  joining_date: z.string().optional(),
+  joining_date: z.coerce.date().optional(),
 });
 
 const parent_profile_schema = z.object({
@@ -29,7 +29,9 @@ const student_profile_schema = z.object({
   name: z.string().min(1, "Name is required"),
   roll_no: z.number(),
   date_of_birth: z.coerce.date(),
-  gender: z.string(),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"], {
+    message: "Role must be one of: MALE, FEMALE, OTHER",
+  }),
   blood_group: z.string().optional(),
   address: z.string().optional(),
   class_id: z.string().min(1, "Class id cannot be empty"),
@@ -136,15 +138,42 @@ export const update_user_schema = z
     parent_profile: parent_profile_schema.partial().optional(),
   })
   .superRefine((data, ctx) => {
+    // If role is provided, we must enforce the STRICT profile schema
     if (data.role) {
       const required_field = profile_by_role[data.role];
-      if (data[required_field]) {
+      const profileData = data[required_field];
+
+      if (!profileData) {
         ctx.addIssue({
           code: "custom",
           message: `${required_field} is required for role '${data.role}'`,
           path: [required_field],
         });
         return;
+      }
+
+      // Map to get the ORIGINAL (non-partial) schema
+      const schemaMap = {
+        SUPER_ADMIN: super_admin_profile_schema,
+        ADMIN: admin_profile_schema,
+        TEACHER: teacher_profile_schema,
+        STUDENT: student_profile_schema,
+        PARENT: parent_profile_schema,
+      };
+
+      const strictSchema = schemaMap[data.role];
+
+      // Re-validate the data against the strict schema
+      const result = strictSchema.safeParse(profileData);
+
+      if (!result.success) {
+        // Forward the errors from the strict validation to the main context
+        result.error.issues.forEach((issue) => {
+          ctx.addIssue({
+            ...issue,
+            path: [required_field, ...issue.path], // ensure the error points to 'student_profile.roll_no' etc.
+          });
+        });
       }
     }
   });

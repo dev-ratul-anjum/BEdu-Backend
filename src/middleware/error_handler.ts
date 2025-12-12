@@ -2,6 +2,10 @@ import e, { ErrorRequestHandler, RequestHandler } from "express";
 import { ZodError } from "zod";
 import api_response from "./api_response.js";
 import { Prisma } from "$/db/generated/client.js";
+import {
+  extract_P2003_field_name,
+  prisma_client_validation_error,
+} from "$/utils/error_helpers.js";
 
 export class Api_error extends Error {
   status_code: number;
@@ -43,6 +47,8 @@ export const global_error_handler: ErrorRequestHandler = async (
   let errors = null;
   let path = req.originalUrl; // Capture the request path
 
+  console.log(error);
+
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     switch (error.code) {
       case "P2002": // Unique constraint
@@ -58,8 +64,22 @@ export const global_error_handler: ErrorRequestHandler = async (
         break;
 
       case "P2003": // Foreign key
+        const modelName = error.meta?.modelName || "UnknownModel";
+        const fieldName = extract_P2003_field_name(error.message);
+
         status_code = 400;
-        message = "Foreign key constraint violation";
+        message = `Invalid value provided for '${fieldName}'. Please ensure the referenced record exists.`;
+        errors = [
+          {
+            path: fieldName !== "unknown_field" ? fieldName : "general",
+            message,
+          },
+        ];
+        break;
+
+      case "P1000": // Auth fail
+        status_code = 500;
+        message = "Database authentication failed";
         errors = [
           {
             path:
@@ -69,10 +89,16 @@ export const global_error_handler: ErrorRequestHandler = async (
         ];
         break;
 
-      case "P1000": // Auth fail
-        status_code = 500;
-        message = "Database authentication failed";
-        errors = [{ path: "general", message }];
+      case "P2011": // Null constraint violation
+        status_code = 400;
+        message = "Required field is missing or null";
+        errors = [
+          {
+            path:
+              (error.meta?.target as string[] | undefined)?.[0] || "general",
+            message,
+          },
+        ];
         break;
 
       default:
@@ -82,8 +108,12 @@ export const global_error_handler: ErrorRequestHandler = async (
         break;
     }
   } else if (error instanceof Prisma.PrismaClientValidationError) {
+    const err = prisma_client_validation_error(error.message);
     status_code = 400;
-    message = "Prisma query validation error";
+    message = err.message ?? "Prisma query validation error";
+    errors = [
+      { path: err.field !== "unknown_field" ? err.field : "general", message },
+    ];
   } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
     status_code = 500;
     message = "Unknown error occurred in Prisma";

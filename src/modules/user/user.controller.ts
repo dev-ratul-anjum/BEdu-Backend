@@ -40,8 +40,9 @@ const update_user = catch_async(
 // Update User Info By Admin
 const update_user_by_admin = catch_async(
   async (req: Request, res: Response, next: NextFunction) => {
+    const user_id = req.params.user_id;
     const update_user = await user_service.update_user_by_admin(
-      req.user!,
+      user_id,
       req.validatedBody
     );
     return api_response(res, 200, {
@@ -108,10 +109,22 @@ const all_super_admins_list = catch_async(
   }
 );
 
+const all_users_list = catch_async(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const all_users = await user_service.all_users_list(req.query);
+
+    return api_response(res, 200, {
+      success: true,
+      message: "User List retrive successfully.",
+      data: all_users,
+    });
+  }
+);
+
 // Delete User
 const delete_user = catch_async(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { user_id } = req.body;
+    const user_id = req.params.user_id;
     const deleted_user = await user_service.delete_user(user_id);
 
     return api_response(res, 200, {
@@ -164,6 +177,7 @@ const user_controller = {
   create_user,
   update_user,
   update_user_by_admin,
+  all_users_list,
   all_students_list,
   all_teachers_list,
   all_parents_list,
