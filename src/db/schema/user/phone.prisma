@@ -1,7 +1,7 @@
 model Phone {
-    id     String  @id @default(uuid())
-    name   String?
-    number String  @unique
+    id             String  @id @default(uuid())
+    aditional_info String?
+    number         String  @unique
 
     parent_id      String?
     parent         Parent?     @relation(fields: [parent_id], references: [id])

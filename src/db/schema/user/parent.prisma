@@ -2,17 +2,14 @@ model Parent {
   id                String  @id @default(uuid())
   father_name       String?
   father_occupation String?
-  father_phone      String?
   father_photo      String?
 
   mother_name       String?
   mother_occupation String?
-  mother_phone      String?
   mother_photo      String?
 
   guardian_name       String?
   guardian_occupation String?
-  guardian_phone      String?
   guardian_photo      String?
   guardian_relation   String?
   guardian_email      String?

@@ -21,8 +21,40 @@ const teacher_profile_schema = z.object({
 });
 
 const parent_profile_schema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.email().optional(),
+  father_name: z.string().min(1, "Father name cannot be empty").optional(),
+  father_occupation: z
+    .string()
+    .min(1, "Father occupation cannot be empty")
+    .optional(),
+  father_photo: z.string().min(1, "Father photo cannot be empty").optional(),
+  mother_name: z.string().min(1, "Mohther name cannot be empty").optional(),
+  mother_occupation: z
+    .string()
+    .min(1, "Mohther occupation cannot be empty")
+    .optional(),
+  mother_photo: z.string().min(1, "Mohther photo cannot be empty").optional(),
+
+  guardian_name: z.string().min(1, "Guardian name cannot be empty").optional(),
+  guardian_occupation: z
+    .string()
+    .min(1, "Guardian occupation cannot be empty")
+    .optional(),
+  guardian_photo: z
+    .string()
+    .min(1, "Guardian photo cannot be empty")
+    .optional(),
+  guardian_relation: z
+    .string()
+    .min(1, "Guardian relation cannot be empty")
+    .optional(),
+  guardian_email: z
+    .string()
+    .min(1, "Guardian email cannot be empty")
+    .optional(),
+  guardian_address: z
+    .string()
+    .min(1, "Guardian address cannot be empty")
+    .optional(),
 });
 
 const student_profile_schema = z.object({

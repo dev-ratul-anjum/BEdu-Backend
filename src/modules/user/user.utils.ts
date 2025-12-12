@@ -13,7 +13,7 @@ export const create_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
         throw new Api_error("Email already in use", 409, "email");
     }
 
-    return tx.superAdmin.create({
+    return await tx.superAdmin.create({
       data: {
         ...profile,
         user_id: user.id,
@@ -31,7 +31,7 @@ export const create_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
         throw new Api_error("Email already in use", 409, "email");
     }
 
-    return tx.admin.create({
+    return await tx.admin.create({
       data: {
         ...profile,
         user_id: user.id,
@@ -47,7 +47,7 @@ export const create_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
       if (existing_email)
         throw new Api_error("Email already in use", 409, "email");
     }
-    return tx.teacher.create({
+    return await tx.teacher.create({
       data: {
         ...profile,
         user_id: user.id,
@@ -80,7 +80,7 @@ export const create_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
         "section_id"
       );
 
-    return tx.student.create({
+    return await tx.student.create({
       data: {
         ...profile,
         user_id: user.id,
@@ -88,7 +88,7 @@ export const create_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
     });
   },
   PARENT: async (tx, user, payload) => {
-    return tx.parent.create({
+    return await tx.parent.create({
       data: {
         ...payload.parent_profile,
         user_id: user.id,
@@ -109,7 +109,7 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
           throw new Api_error("Email already in use", 409, "email");
       }
 
-      return tx.superAdmin.update({
+      return await tx.superAdmin.update({
         where: {
           user_id: user.id,
         },
@@ -129,7 +129,7 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
           throw new Api_error("Email already in use", 409, "email");
       }
 
-      return tx.admin.update({
+      return await tx.admin.update({
         where: { user_id: user.id },
         data: profile,
       });
@@ -145,7 +145,7 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
         if (existing_email)
           throw new Api_error("Email already in use", 409, "email");
       }
-      return tx.teacher.update({
+      return await tx.teacher.update({
         where: { user_id: user.id },
         data: profile,
       });
@@ -197,7 +197,7 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
           );
       }
 
-      return tx.student.update({
+      return await tx.student.update({
         where: { user_id: user.id },
         data: profile,
       });
@@ -206,7 +206,7 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
   PARENT: async (tx, user, payload) => {
     const profile = payload.parent_profile;
     if (profile && Object.keys(profile).length > 0) {
-      return tx.parent.update({
+      return await tx.parent.update({
         where: { user_id: user.id },
         data: profile,
       });
