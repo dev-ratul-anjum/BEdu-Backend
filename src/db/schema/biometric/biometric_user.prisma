@@ -1,0 +1,9 @@
+model BiometricUser {
+    id               String   @id
+    user_id          String   @unique
+    cumulative_count Int      @default(0)
+    created_at       DateTime @default(now())
+
+    user            User            @relation(fields: [user_id], references: [id])
+    attendance_raws AttendanceRaw[]
+}

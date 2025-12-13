@@ -1,0 +1,8 @@
+model BiometricDevice {
+    id         String   @id @default(ulid())
+    name       String
+    is_active  Boolean  @default(true)
+    created_at DateTime @default(now())
+
+    attendance_raws AttendanceRaw[]
+}

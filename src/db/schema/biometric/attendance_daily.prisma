@@ -1,0 +1,23 @@
+model AttendanceDaily {
+    id             String     @id @default(uuid())
+    user_id        String
+    date           DateTime   @db.Date
+    morning_status SlotStatus @default(ABSENT)
+    noon_status    SlotStatus @default(ABSENT)
+    final_status   DayStatus  @default(ABSENT)
+
+    user User @relation(fields: [user_id], references: [id])
+
+    @@unique([user_id, date])
+}
+
+enum SlotStatus {
+    PRESENT
+    LATE
+    ABSENT
+}
+
+enum DayStatus {
+    PRESENT
+    ABSENT
+}

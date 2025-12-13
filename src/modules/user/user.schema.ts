@@ -68,6 +68,7 @@ const student_profile_schema = z.object({
   address: z.string().optional(),
   class_id: z.string().min(1, "Class id cannot be empty"),
   section_id: z.string().min(1, "Section id cannot be empty"),
+  parent_id: z.string().min(1, "Parent id cannot be empty").optional(),
 });
 
 const rawSchoolName = process.env.SCHOOL_NAME;

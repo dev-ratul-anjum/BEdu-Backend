@@ -1,0 +1,15 @@
+model AttendanceRaw {
+    id             String     @id @default(uuid())
+    device_id      String
+    device_user_id String
+    timestamp      DateTime
+    verify_type    VerifyType
+
+    device      BiometricDevice @relation(fields: [device_id], references: [id])
+    device_user BiometricUser   @relation(fields: [device_user_id], references: [id])
+}
+
+enum VerifyType {
+    FACE
+    FINGER
+}
