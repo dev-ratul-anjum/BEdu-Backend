@@ -4,24 +4,17 @@ import {
   TCreate_attendance_raw_schema,
   TUpdate_attendance_daily_schema,
 } from "./attendance.schema.js";
+import {
+  LATE_PRESENT_ENABLED,
+  MAX_CUMULATIVE_COUNT,
+  SLOT_CONFIG,
+  to_minutes,
+} from "./attendance.utils.js";
 
 const create_attendance = async (data: TCreate_attendance_raw_schema) => {
-  // --- SLOT CONFIG ---
-  const SLOT_CONFIG = {
-    morning: { start: "07:30", end: "08:00", late_end: "08:15" },
-    noon: { start: "11:30", end: "12:00", late_end: "12:15" },
-  };
-  const LATE_PRESENT_ENABLED = true;
-  const MAX_CUMULATIVE_COUNT = 3;
-
   const punch_hm = data.timestamp.getHours() * 60 + data.timestamp.getMinutes();
-  const to_minutes = (time: string) => {
-    const [h, m] = time.split(":").map(Number);
 
-    return h * 60 + m;
-  };
-
-  let slot: "morning" | "noon" | null = null;
+  let slot: "morning" | "noon";
   let is_late = false;
 
   if (
@@ -40,8 +33,9 @@ const create_attendance = async (data: TCreate_attendance_raw_schema) => {
     throw new Api_error("Outside attendance slot. Ignored.", 200);
   }
 
-  const updated_daily_attendance = await db.$transaction(async (tx) => {
-    const device_user = await db.biometricUser.findUnique({
+  return await db.$transaction(async (tx) => {
+    // ---------- DEVICE USER ----------
+    const device_user = await tx.biometricUser.findUnique({
       where: { id: data.device_user_id },
     });
 
@@ -51,37 +45,27 @@ const create_attendance = async (data: TCreate_attendance_raw_schema) => {
 
     const todayDate = new Date(data.timestamp.toDateString());
 
-    // Find or create daily attendance
-    let daily = await tx.attendanceDaily.findUnique({
+    // ---------- DAILY ----------
+    const daily = await tx.attendanceDaily.findUnique({
       where: {
-        user_id_date: { user_id: device_user.user_id, date: todayDate },
+        user_id_date: {
+          user_id: device_user.user_id,
+          date: todayDate,
+        },
       },
     });
 
-    if (!daily) {
-      daily = await tx.attendanceDaily.create({
-        data: {
-          user_id: device_user.user_id,
-          date: todayDate,
-          morning_status: "ABSENT",
-          noon_status: "ABSENT",
-          final_status: "ABSENT",
-        },
-      });
+    // ---------- DUPLICATE CHECK ----------
+    if (daily) {
+      const current_slot_status =
+        slot === "morning" ? daily.morning_status : daily.noon_status;
+
+      if (current_slot_status !== "ABSENT") {
+        throw new Api_error("Attendance already recorded. Ignored.", 409);
+      }
     }
 
-    // Duplicate punch check (before raw create)
-    const current_slot_status =
-      slot === "morning" ? daily.morning_status : daily.noon_status;
-    if (current_slot_status !== "ABSENT")
-      throw new Api_error("Attendance already recorded. Ignored.", 200);
-
-    // Create new raw attendance
-    const new_raw_attendance = await tx.attendanceRaw.create({
-      data,
-    });
-
-    // Calculate slot status
+    // ---------- SLOT STATUS ----------
     let slot_status: "PRESENT" | "LATE" | "ABSENT" = !is_late
       ? "PRESENT"
       : LATE_PRESENT_ENABLED
@@ -89,45 +73,79 @@ const create_attendance = async (data: TCreate_attendance_raw_schema) => {
       : "ABSENT";
 
     let new_cumulative_count = device_user.cumulative_count;
+
     if (slot_status === "LATE") {
       new_cumulative_count += 1;
+
       if (new_cumulative_count > MAX_CUMULATIVE_COUNT) {
         slot_status = "ABSENT";
         new_cumulative_count = 0;
       }
     }
 
-    // Update daily attendance
-    const update_data: any = {};
-    if (slot === "morning") update_data.morning_status = slot_status;
-    else update_data.noon_status = slot_status;
+    // ---------- RAW (ONCE) ----------
+    await tx.attendanceRaw.create({ data });
 
-    const morning_status =
-      slot === "morning" ? slot_status : daily.morning_status;
-    const noon_status = slot === "noon" ? slot_status : daily.noon_status;
+    let result;
 
-    update_data.final_status =
-      morning_status === "ABSENT" || noon_status === "ABSENT"
-        ? "ABSENT"
-        : "PRESENT";
+    // ================= FIRST TIME =================
+    if (!daily) {
+      const morning_status = slot === "morning" ? slot_status : "ABSENT";
+      const noon_status = slot === "noon" ? slot_status : "ABSENT";
 
-    // Update cumulative count in biometricUser
-    if (new_cumulative_count !== device_user.cumulative_count) {
-      await tx.biometricUser.update({
-        where: { id: device_user.id },
-        data: { cumulative_count: new_cumulative_count },
+      const final_status =
+        morning_status === "ABSENT" || noon_status === "ABSENT"
+          ? "ABSENT"
+          : "PRESENT";
+
+      result = await tx.attendanceDaily.create({
+        data: {
+          user_id: device_user.user_id,
+          date: todayDate,
+          morning_status,
+          noon_status,
+          final_status,
+        },
+      });
+    }
+    // ================= UPDATE =================
+    else {
+      const update_data: Partial<typeof daily> = {};
+
+      if (slot === "morning") {
+        update_data.morning_status = slot_status;
+      } else {
+        update_data.noon_status = slot_status;
+      }
+
+      const morning_status =
+        slot === "morning" ? slot_status : daily.morning_status;
+
+      const noon_status = slot === "noon" ? slot_status : daily.noon_status;
+
+      update_data.final_status =
+        morning_status === "ABSENT" || noon_status === "ABSENT"
+          ? "ABSENT"
+          : "PRESENT";
+
+      result = await tx.attendanceDaily.update({
+        where: { id: daily.id },
+        data: update_data,
       });
     }
 
-    const updated_daily_attendance = await tx.attendanceDaily.update({
-      where: { id: daily.id },
-      data: update_data,
-    });
+    // ---------- CUMULATIVE COUNT (ONCE) ----------
+    if (new_cumulative_count !== device_user.cumulative_count) {
+      await tx.biometricUser.update({
+        where: { id: device_user.id },
+        data: {
+          cumulative_count: new_cumulative_count,
+        },
+      });
+    }
 
-    return updated_daily_attendance;
+    return result;
   });
-
-  return updated_daily_attendance;
 };
 
 const all_attendance_list = async () => {
