@@ -213,3 +213,35 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
     }
   },
 };
+
+export const USER_QUERY_BY_ROLE = {
+  SUPER_ADMIN: {
+    super_admin_profile: true,
+  },
+  ADMIN: {
+    admin_profile: true,
+  },
+
+  STUDENT: {
+    student_profile: {
+      include: {
+        results: true,
+      },
+    },
+  },
+  TEACHER: {
+    teacher_profile: {
+      include: {
+        routine_entries: true,
+        class_teacher_of: true,
+      },
+    },
+  },
+  PARENT: {
+    parent_profile: {
+      include: {
+        students: true,
+      },
+    },
+  },
+} as const;

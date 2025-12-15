@@ -12,6 +12,7 @@ import { ProfileHandlerFn } from "./user.interface.js";
 import {
   create_profile_handlers,
   update_profile_handlers,
+  USER_QUERY_BY_ROLE,
 } from "./user.utils.js";
 
 const create_user = async (data: TCreate_user_schema) => {
@@ -248,19 +249,19 @@ const all_users_list = async (query: { role?: UserRole }) => {
 };
 
 const get_current_user = async (user_id: string, role: UserRole) => {
-  const profile_key = profile_by_role[role];
   const user = await db.user.findUnique({
     where: { id: user_id },
     select: {
       id: true,
       username: true,
       role: true,
-      [profile_key]: true,
+      ...USER_QUERY_BY_ROLE[role],
     },
   });
 
   return user;
 };
+
 const user_service = {
   create_user,
   login_user,

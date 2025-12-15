@@ -1,11 +1,16 @@
 model Student {
-  id            String   @id @default(uuid())
-  name          String
-  roll_no       Int      @unique
-  date_of_birth DateTime
-  gender        Gender
-  blood_group   String?
-  address       String?
+  id                String      @id @default(uuid())
+  first_name        String
+  last_name         String
+  roll_no           Int?        @unique
+  date_of_birth     DateTime
+  gender            Gender
+  blood_group       BloodGroup?
+  current_address   String?
+  permanent_address String?
+  addmission_date   DateTime?
+  religion          Religion?
+  photo             String?
 
   user_id String @unique
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -19,8 +24,7 @@ model Student {
   parent_id String?
   parent    Parent? @relation(fields: [parent_id], references: [id])
 
-  attendances Attendance[]
-  results     Result[]
+  results Result[]
 
   @@map("students")
 }

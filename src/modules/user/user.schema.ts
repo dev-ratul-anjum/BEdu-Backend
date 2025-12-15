@@ -58,14 +58,41 @@ const parent_profile_schema = z.object({
 });
 
 const student_profile_schema = z.object({
-  name: z.string().min(1, "Name is required"),
-  roll_no: z.number(),
+  first_name: z.string().min(1, "Frist name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  roll_no: z.number().optional(),
   date_of_birth: z.coerce.date(),
+  addmission_date: z.coerce.date().optional(),
   gender: z.enum(["MALE", "FEMALE", "OTHER"], {
-    message: "Role must be one of: MALE, FEMALE, OTHER",
+    message: "Gender must be one of: MALE, FEMALE, OTHER",
   }),
-  blood_group: z.string().optional(),
-  address: z.string().optional(),
+  religion: z
+    .enum(["ISLAM", "HINDUISM"], {
+      message: "Religion must be one of: ISLAM, HINDUISM",
+    })
+    .optional(),
+
+  blood_group: z
+    .enum(
+      [
+        "A_POS",
+        "A_NEG",
+        "B_POS",
+        "B_NEG",
+        "AB_POS",
+        "AB_NEG",
+        "O_POS",
+        "O_NEG",
+      ],
+      {
+        message:
+          "Blood group must be one of: A_POS, A_NEG, B_POS, B_NEG, AB_POS, AB_NEG, O_POS, O_NEG",
+      }
+    )
+    .optional(),
+  photo: z.string().optional(),
+  current_address: z.string().optional(),
+  permanent_address: z.string().optional(),
   class_id: z.string().min(1, "Class id cannot be empty"),
   section_id: z.string().min(1, "Section id cannot be empty"),
   parent_id: z.string().min(1, "Parent id cannot be empty").optional(),
