@@ -19,13 +19,13 @@ attendance_router.post(
 
 // Get All Attendance
 attendance_router.get(
-  "/all",
+  "/list",
   check_auth(["SUPER_ADMIN"]),
   attendance_controller.all_attendance_list
 );
 // Get All Raw Attendance
 attendance_router.get(
-  "/all/raw",
+  "/raw/list",
   check_auth(["SUPER_ADMIN"]),
   attendance_controller.all_raw_attendance_list
 );

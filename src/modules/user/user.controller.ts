@@ -155,13 +155,20 @@ const login_user = catch_async(async (req, res, next) => {
 });
 
 // Get Current User
-const get_current_user = (req: Request, res: Response) => {
-  return api_response(res, 200, {
-    success: true,
-    message: "User retrieved successfully",
-    data: req.user,
-  });
-};
+const get_current_user = catch_async(
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("c");
+    const user = await user_service.get_current_user(
+      req.user!.id,
+      req.user!.role
+    );
+    return api_response(res, 200, {
+      success: true,
+      message: "User retrieved successfully",
+      data: user,
+    });
+  }
+);
 
 // Logout User
 const logout_user = (req: Request, res: Response) => {

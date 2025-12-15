@@ -2,6 +2,7 @@ import { db } from "$/db/index.js";
 import { Api_error } from "$/middleware/error_handler.js";
 import bcrypt from "bcryptjs";
 import {
+  profile_by_role,
   TCreate_user_schema,
   TLogin_user_schema,
   TUpdate_user_schema,
@@ -246,6 +247,20 @@ const all_users_list = async (query: { role?: UserRole }) => {
   return all_users;
 };
 
+const get_current_user = async (user_id: string, role: UserRole) => {
+  const profile_key = profile_by_role[role];
+  const user = await db.user.findUnique({
+    where: { id: user_id },
+    select: {
+      id: true,
+      username: true,
+      role: true,
+      [profile_key]: true,
+    },
+  });
+
+  return user;
+};
 const user_service = {
   create_user,
   login_user,
@@ -258,6 +273,7 @@ const user_service = {
   all_super_admins_list,
   update_user_by_admin,
   delete_user,
+  get_current_user,
 };
 
 export default user_service;

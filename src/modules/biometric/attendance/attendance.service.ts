@@ -148,10 +148,99 @@ const create_attendance = async (data: TCreate_attendance_raw_schema) => {
   });
 };
 
-const all_attendance_list = async () => {
-  const all_attendance = await db.attendanceDaily.findMany();
+const all_attendance_list = async (query: {
+  role?: string;
+  class_id?: string;
+  section_id?: string;
+  morning_status?: string;
+  noon_status?: string;
+  final_status?: string;
+  name?: string;
+  username?: string;
+}) => {
+  const {
+    role,
+    class_id,
+    section_id,
+    morning_status,
+    noon_status,
+    final_status,
+    username,
+    name,
+  } = query;
+
+  const user_where: any = {};
+
+  if (role) user_where.role = role;
+  if (username)
+    user_where.username = { contains: username, mode: "insensitive" };
+
+  // Name filter (role optional)
+  if (name) {
+    if (role === "STUDENT") {
+      user_where.student_profile = {
+        is: { name: { contains: name, mode: "insensitive" } },
+      };
+    } else if (role === "TEACHER") {
+      user_where.teacher_profile = {
+        is: { name: { contains: name, mode: "insensitive" } },
+      };
+    } else {
+      // Role not specified: OR logic for both profiles
+      user_where.OR = [
+        {
+          student_profile: {
+            is: { name: { contains: name, mode: "insensitive" } },
+          },
+        },
+        {
+          teacher_profile: {
+            is: { name: { contains: name, mode: "insensitive" } },
+          },
+        },
+      ];
+    }
+  }
+
+  // Student-specific filters
+  if (role === "STUDENT" && (class_id || section_id)) {
+    const student_where: any = {};
+    if (class_id) student_where.class_id = class_id;
+    if (section_id) student_where.section_id = section_id;
+
+    if (Object.keys(student_where).length > 0) {
+      if (!user_where.student_profile) user_where.student_profile = { is: {} };
+      Object.assign(user_where.student_profile.is, student_where);
+    }
+  }
+
+  const attendance_where: any = {};
+  if (morning_status) attendance_where.morning_status = morning_status;
+  if (noon_status) attendance_where.noon_status = noon_status;
+  if (final_status) attendance_where.final_status = final_status;
+
+  const all_attendance = await db.attendanceDaily.findMany({
+    where: {
+      ...attendance_where,
+      user: user_where,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          role: true,
+          username: true,
+          student_profile: {
+            select: { name: true, section_id: true, class_id: true },
+          },
+          teacher_profile: { select: { name: true } },
+        },
+      },
+    },
+  });
   return all_attendance;
 };
+
 const all_raw_attendance_list = async () => {
   const all_raw_attendance = await db.attendanceRaw.findMany();
   return all_raw_attendance;

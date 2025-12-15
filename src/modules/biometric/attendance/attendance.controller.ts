@@ -19,7 +19,11 @@ const create_attendance = catch_async(
 
 const all_attendance_list = catch_async(
   async (req: Request, res: Response, next: NextFunction) => {
-    const all_attendance = await attendance_service.all_attendance_list();
+    const all_attendance = await attendance_service.all_attendance_list(
+      req.query
+    );
+
+    console.log("hit");
 
     return api_response(res, 201, {
       success: true,
