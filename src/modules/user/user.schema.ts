@@ -27,12 +27,14 @@ const parent_profile_schema = z.object({
     .min(1, "Father occupation cannot be empty")
     .optional(),
   father_photo: z.string().min(1, "Father photo cannot be empty").optional(),
+  father_phone: z.string().min(1, "Father phone cannot be empty").optional(),
   mother_name: z.string().min(1, "Mohther name cannot be empty").optional(),
   mother_occupation: z
     .string()
     .min(1, "Mohther occupation cannot be empty")
     .optional(),
   mother_photo: z.string().min(1, "Mohther photo cannot be empty").optional(),
+  mother_phone: z.string().min(1, "Mohther phone cannot be empty").optional(),
 
   guardian_name: z.string().min(1, "Guardian name cannot be empty").optional(),
   guardian_occupation: z
@@ -42,6 +44,10 @@ const parent_profile_schema = z.object({
   guardian_photo: z
     .string()
     .min(1, "Guardian photo cannot be empty")
+    .optional(),
+  guardian_phone: z
+    .string()
+    .min(1, "Guardian phone cannot be empty")
     .optional(),
   guardian_relation: z
     .string()

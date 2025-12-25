@@ -16,8 +16,8 @@ const create_user = catch_async(
 
     const new_user = await user_service.create_user(data);
 
-    const token = create_jwt_token(new_user.id);
-    set_auth_cookie(res, token);
+    // const token = create_jwt_token(new_user.id);
+    // set_auth_cookie(res, token);
 
     return api_response(res, 200, {
       success: true,

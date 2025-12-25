@@ -12,8 +12,16 @@ const create_section = async (data: TCreate_section_schema) => {
   return new_section;
 };
 
-const all_section_list = async () => {
-  const all_section = await db.section.findMany();
+const all_section_list = async (query: { class_id?: string }) => {
+  const { class_id } = query;
+  const section_where: any = {};
+  if (class_id) section_where.class_id = class_id;
+
+  const all_section = await db.section.findMany({
+    where: {
+      ...section_where,
+    },
+  });
   return all_section;
 };
 

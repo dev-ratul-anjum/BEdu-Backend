@@ -3,14 +3,17 @@ model Parent {
   father_name       String?
   father_occupation String?
   father_photo      String?
+  father_phone      String?
 
   mother_name       String?
   mother_occupation String?
   mother_photo      String?
+  mother_phone      String?
 
   guardian_name       String?
   guardian_occupation String?
   guardian_photo      String?
+  guardian_phone      String?
   guardian_relation   String?
   guardian_email      String?
   guardian_address    String?

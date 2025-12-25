@@ -17,7 +17,7 @@ const create_section = catch_async(
 
 const all_section_list = catch_async(
   async (req: Request, res: Response, next: NextFunction) => {
-    const all_section = await section_service.all_section_list();
+    const all_section = await section_service.all_section_list(req.query);
 
     return api_response(res, 201, {
       success: true,
