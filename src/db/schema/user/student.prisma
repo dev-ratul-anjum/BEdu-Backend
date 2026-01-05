@@ -11,6 +11,7 @@ model Student {
   addmission_date   DateTime?
   religion          Religion?
   photo             String?
+  guardians         String[]
 
   user_id String @unique
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -20,9 +21,6 @@ model Student {
 
   section_id String
   section    Section @relation(fields: [section_id], references: [id])
-
-  parent_id String?
-  parent    Parent? @relation(fields: [parent_id], references: [id])
 
   results Result[]
 

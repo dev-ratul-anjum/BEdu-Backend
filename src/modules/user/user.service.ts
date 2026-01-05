@@ -1,9 +1,11 @@
 import { db } from "$/db/index.js";
 import { Api_error } from "$/middleware/error_handler.js";
 import bcrypt from "bcryptjs";
+
 import {
+  guardian_schema,
   profile_by_role,
-  TCreate_user_schema,
+  TCreate_student_schema,
   TLogin_user_schema,
   TUpdate_user_schema,
 } from "./user.schema.js";
@@ -15,36 +17,174 @@ import {
   USER_QUERY_BY_ROLE,
 } from "./user.utils.js";
 
-const create_user = async (data: TCreate_user_schema) => {
+const create_student = async (data: TCreate_student_schema) => {
   const user = await db.user.findUnique({
     where: {
-      username: data.username,
+      username: data.user.username,
     },
   });
   if (user) {
     throw new Api_error("A user with this username already exists.", 409);
   }
-  const hashed_password = await bcrypt.hash(data.password, 10);
 
-  // All Profile Handlers
+  if (data.student_profile.roll_no) {
+    const existing_roll = await db.student.findUnique({
+      where: {
+        roll_no: data.student_profile.roll_no,
+        section_id: data.student_profile.section_id,
+      },
+    });
 
-  // Create User & Profile
+    if (existing_roll) throw new Api_error("Roll already in use", 409, "roll");
+  }
+
+  // const section = await db.section.findUnique({
+  //   where: { id: data.student_profile.section_id },
+  // });
+
+  // if (!section)
+  //   throw new Api_error(
+  //     "Requested section does not exist",
+  //     404,
+  //     "section_id"
+  //   );
+  // if (section.class_id !== profile.class_id)
+  //   throw new Api_error(
+  //     "This section is not available for the selected class.",
+  //     404,
+  //     "section_id"
+  //   );
+
+  let new_guardian_ids: string[] = [];
+  if (data.guardians && data.guardians.length > 0) {
+    const existing_guardians = await Promise.all(
+      data.guardians.map((guardian) =>
+        db.guardian.findUnique({
+          where: { phone: guardian.phone },
+        })
+      )
+    );
+
+    for (const guardian of existing_guardians) {
+      if (guardian)
+        throw new Api_error("Phone already in use", 409, "phone", guardian);
+    }
+  }
+
+  const hashed_password = await bcrypt.hash(data.user.password, 10);
+
+  // Create Student & Profile & Guardians
   const new_user = await db.$transaction(async (tx) => {
     const user = await tx.user.create({
       data: {
-        username: data.username,
-        role: data.role,
+        username: data.user.username,
+        role: "STUDENT",
         password: hashed_password,
       },
     });
 
-    const handler = create_profile_handlers[data.role];
-    await handler(tx, user, data);
+    if (data.guardians && data.guardians.length > 0) {
+      const new_guardians = await Promise.all(
+        data.guardians.map((guardian) =>
+          tx.guardian.create({
+            data: guardian,
+          })
+        )
+      );
 
-    return { id: user.id, username: user.username, role: user.role };
+      new_guardian_ids = new_guardians.map((guardian) => guardian.id);
+    }
+
+    const new_std = await tx.student.create({
+      data: {
+        ...data.student_profile,
+        user_id: user.id,
+        guardians: new_guardian_ids,
+      },
+    });
+
+    return {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      first_name: new_std.first_name,
+    };
   });
 
   return new_user;
+};
+
+const create_user = async (data: TCreate_student_schema) => {
+  //   const user = await db.user.findUnique({
+  //     where: {
+  //       username: data.username,
+  //     },
+  //   });
+  //   if (user) {
+  //     throw new Api_error("A user with this username already exists.", 409);
+  //   }
+  //    if (data.student_profile.roll_no) {
+  //       const existing_roll = await db.student.findUnique({
+  //         where: { roll_no: data.roll_no, section_id: profile.section_id },
+  //       });
+  //       if (existing_roll)
+  //         throw new Api_error("Roll already in use", 409, "roll");
+  //     }
+  //     const section = await tx.section.findUnique({
+  //       where: { id: profile.section_id },
+  //     });
+  //     if (!section)
+  //       throw new Api_error(
+  //         "Requested section does not exist",
+  //         404,
+  //         "section_id"
+  //       );
+  //     if (section.class_id !== profile.class_id)
+  //       throw new Api_error(
+  //         "This section is not available for the selected class.",
+  //         404,
+  //         "section_id"
+  //       );
+  //   let new_guardians = null;
+  //   if (data.guardians && data.guardians.length > 0) {
+  //     new_guardians = data.guardians.map(async (guardian: any) => {
+  //       const existing_guardian = await db.guardian.findUnique({
+  //         where: { phone: guardian.phone },
+  //       });
+  //       if (existing_guardian)
+  //         throw new Api_error(
+  //           "Phone already in use",
+  //           409,
+  //           "phone",
+  //           existing_guardian
+  //         );
+  //       return guardian;
+  //     });
+  //   }
+  //   const hashed_password = await bcrypt.hash(data.password, 10);
+  //   // Create User & Profile
+  //   const new_user = await db.$transaction(async (tx) => {
+  //     const user = await tx.user.create({
+  //       data: {
+  //         username: data.username,
+  //         role: data.role,
+  //         password: hashed_password,
+  //       },
+  //     });
+  //     if (new_guardians && new_guardians.length > 0) {
+  //       new_guardians = data.guardians.map(async (guardian: any) => {
+  //         await db.guardian.create({
+  //           data: {
+  //             ...guardian,
+  //           },
+  //         });
+  //       });
+  //     }
+  //     const handler = create_profile_handlers[data.role];
+  //     await handler(tx, user, { ...data, guardians: new_guardians });
+  //     return { id: user.id, username: user.username, role: user.role };
+  //   });
+  //   return new_user;
 };
 
 const update_user = async () => {};
@@ -87,9 +227,9 @@ const update_user_by_admin = async (
         await handler(tx, updated_user, data);
 
         switch (prev_role) {
-          case "SUPER_ADMIN":
-            await tx.superAdmin.delete({ where: { user_id } });
-            break;
+          // case "SUPER_ADMIN":
+          //   await tx.superAdmin.delete({ where: { user_id } });
+          //   break;
           case "ADMIN":
             await tx.admin.delete({ where: { user_id } });
             break;
@@ -99,9 +239,9 @@ const update_user_by_admin = async (
           case "STUDENT":
             await tx.student.delete({ where: { user_id } });
             break;
-          case "PARENT":
-            await tx.parent.delete({ where: { user_id } });
-            break;
+          // case "PARENT":
+          //   await tx.parent.delete({ where: { user_id } });
+          //   break;
           default:
             break;
         }
@@ -138,20 +278,20 @@ const delete_user = async (user_id: string) => {
     throw new Api_error("User not found", 404);
   }
 
-  if (user.role === "SUPER_ADMIN") {
-    const users = await db.user.findMany({
-      where: {
-        role: "SUPER_ADMIN",
-      },
-    });
+  // if (user.role === "SUPER_ADMIN") {
+  //   const users = await db.user.findMany({
+  //     where: {
+  //       role: "SUPER_ADMIN",
+  //     },
+  //   });
 
-    if (users.length < 2) {
-      throw new Api_error(
-        "Operation not allowed: At least one SUPER ADMIN must remain",
-        403
-      );
-    }
-  }
+  //   if (users.length < 2) {
+  //     throw new Api_error(
+  //       "Operation not allowed: At least one SUPER ADMIN must remain",
+  //       403
+  //     );
+  //   }
+  // }
 
   const deleted_user = await db.user.delete({
     where: {
@@ -202,14 +342,14 @@ const all_teachers_list = async () => {
 
   return teachers;
 };
-const all_parents_list = async () => {
-  const parents = await db.user.findMany({
-    where: { role: "PARENT" },
-    select: { id: true, username: true, role: true },
-  });
+// const all_parents_list = async () => {
+//   const parents = await db.user.findMany({
+//     where: { role: "PARENT" },
+//     select: { id: true, username: true, role: true },
+//   });
 
-  return parents;
-};
+//   return parents;
+// };
 const all_admins_list = async () => {
   const admins = await db.user.findMany({
     where: { role: "ADMIN" },
@@ -218,14 +358,14 @@ const all_admins_list = async () => {
 
   return admins;
 };
-const all_super_admins_list = async () => {
-  const super_admins = await db.user.findMany({
-    where: { role: "SUPER_ADMIN" },
-    select: { id: true, username: true, role: true },
-  });
+// const all_super_admins_list = async () => {
+//   const super_admins = await db.user.findMany({
+//     where: { role: "SUPER_ADMIN" },
+//     select: { id: true, username: true, role: true },
+//   });
 
-  return super_admins;
-};
+//   return super_admins;
+// };
 
 const all_users_list = async (query: { role?: UserRole }) => {
   const { role } = query;
@@ -264,14 +404,15 @@ const get_current_user = async (user_id: string, role: UserRole) => {
 
 const user_service = {
   create_user,
+  create_student,
   login_user,
   update_user,
   all_users_list,
   all_students_list,
   all_teachers_list,
-  all_parents_list,
+  // all_parents_list,
   all_admins_list,
-  all_super_admins_list,
+  // all_super_admins_list,
   update_user_by_admin,
   delete_user,
   get_current_user,

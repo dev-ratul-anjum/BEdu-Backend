@@ -14,16 +14,14 @@ export const create_academic_year_schema = z
     path: ["end_date"],
   });
 
-export const update_academic_year_schema = create_academic_year_schema
-  .partial()
-  .refine(
-    (data) =>
-      data.start_date && data.end_date ? data.start_date < data.end_date : true,
-    {
-      message: "Start date must be earlier than end date",
-      path: ["end_date"],
-    }
-  );
+export const update_academic_year_schema = create_academic_year_schema.refine(
+  (data) =>
+    data.start_date && data.end_date ? data.start_date < data.end_date : true,
+  {
+    message: "Start date must be earlier than end date",
+    path: ["end_date"],
+  }
+);
 
 export type TCreate_academic_year_schema = z.infer<
   typeof create_academic_year_schema

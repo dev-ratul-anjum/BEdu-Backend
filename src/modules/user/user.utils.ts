@@ -3,23 +3,6 @@ import { Api_error } from "$/middleware/error_handler.js";
 import { ProfileHandlerFn } from "./user.interface.js";
 
 export const create_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
-  SUPER_ADMIN: async (tx, user, payload) => {
-    const profile = payload.super_admin_profile;
-    if (profile.email) {
-      const existing_email = await tx.superAdmin.findUnique({
-        where: { email: profile.email },
-      });
-      if (existing_email)
-        throw new Api_error("Email already in use", 409, "email");
-    }
-
-    return await tx.superAdmin.create({
-      data: {
-        ...profile,
-        user_id: user.id,
-      },
-    });
-  },
   ADMIN: async (tx, user, payload) => {
     const profile = payload.admin_profile;
 
@@ -57,66 +40,45 @@ export const create_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
   STUDENT: async (tx, user, payload) => {
     const profile = payload.student_profile;
 
-    const existing_roll = await tx.student.findUnique({
-      where: { roll_no: profile.roll_no, section_id: profile.section_id },
-    });
-
-    if (existing_roll) throw new Api_error("Roll already in use", 409, "roll");
-
-    const section = await tx.section.findUnique({
-      where: { id: profile.section_id },
-    });
-
-    if (!section)
-      throw new Api_error(
-        "Requested section does not exist",
-        404,
-        "section_id"
-      );
-    if (section.class_id !== profile.class_id)
-      throw new Api_error(
-        "This section is not available for the selected class.",
-        404,
-        "section_id"
-      );
-
-    return await tx.student.create({
+    const new_std = await tx.student.create({
       data: {
         ...profile,
         user_id: user.id,
       },
     });
+
+    return;
   },
-  PARENT: async (tx, user, payload) => {
-    return await tx.parent.create({
-      data: {
-        ...payload.parent_profile,
-        user_id: user.id,
-      },
-    });
-  },
+  // PARENT: async (tx, user, payload) => {
+  //   return await tx.parent.create({
+  //     data: {
+  //       ...payload.parent_profile,
+  //       user_id: user.id,
+  //     },
+  //   });
+  // },
 };
 
 export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
-  SUPER_ADMIN: async (tx, user, payload) => {
-    const profile = payload.super_admin_profile;
-    if (profile && Object.keys(profile).length > 0) {
-      if (profile.email) {
-        const existing_email = await tx.superAdmin.findUnique({
-          where: { email: profile.email },
-        });
-        if (existing_email)
-          throw new Api_error("Email already in use", 409, "email");
-      }
+  // SUPER_ADMIN: async (tx, user, payload) => {
+  //   const profile = payload.super_admin_profile;
+  //   if (profile && Object.keys(profile).length > 0) {
+  //     if (profile.email) {
+  //       const existing_email = await tx.superAdmin.findUnique({
+  //         where: { email: profile.email },
+  //       });
+  //       if (existing_email)
+  //         throw new Api_error("Email already in use", 409, "email");
+  //     }
 
-      return await tx.superAdmin.update({
-        where: {
-          user_id: user.id,
-        },
-        data: profile,
-      });
-    }
-  },
+  //     return await tx.superAdmin.update({
+  //       where: {
+  //         user_id: user.id,
+  //       },
+  //       data: profile,
+  //     });
+  //   }
+  // },
   ADMIN: async (tx, user, payload) => {
     const profile = payload.admin_profile;
 
@@ -203,15 +165,15 @@ export const update_profile_handlers: Record<UserRole, ProfileHandlerFn> = {
       });
     }
   },
-  PARENT: async (tx, user, payload) => {
-    const profile = payload.parent_profile;
-    if (profile && Object.keys(profile).length > 0) {
-      return await tx.parent.update({
-        where: { user_id: user.id },
-        data: profile,
-      });
-    }
-  },
+  // PARENT: async (tx, user, payload) => {
+  //   const profile = payload.parent_profile;
+  //   if (profile && Object.keys(profile).length > 0) {
+  //     return await tx.parent.update({
+  //       where: { user_id: user.id },
+  //       data: profile,
+  //     });
+  //   }
+  // },
 };
 
 export const USER_QUERY_BY_ROLE = {

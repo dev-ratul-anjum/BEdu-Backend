@@ -4,13 +4,11 @@ model User {
   password String
   role     UserRole
 
-  admin_profile       Admin?
-  teacher_profile     Teacher?
-  student_profile     Student?
-  parent_profile      Parent?
-  super_admin_profile SuperAdmin?
-  biometric_user      BiometricUser?
-  attendance_dailies  AttendanceDaily[]
+  admin_profile      Admin?
+  teacher_profile    Teacher?
+  student_profile    Student?
+  biometric_user     BiometricUser?
+  attendance_dailies AttendanceDaily[]
 
   @@map("users")
 }

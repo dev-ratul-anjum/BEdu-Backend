@@ -12,7 +12,7 @@ const subject_router = Router();
 // Crate Academic Year
 subject_router.post(
   "/create",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   validate_data(create_subject_schema),
   subject_controller.create_subject
 );
@@ -20,14 +20,14 @@ subject_router.post(
 // Get All Academic Years
 subject_router.get(
   "/all",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   subject_controller.all_subject_list
 );
 
 // Update Academic Year
 subject_router.patch(
   "/update/:subject_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   validate_data(update_subject_schema),
   subject_controller.update_subject
 );
@@ -35,7 +35,7 @@ subject_router.patch(
 // Delete Academic Year
 subject_router.delete(
   "/delete/:subject_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   subject_controller.delete_subject
 );
 

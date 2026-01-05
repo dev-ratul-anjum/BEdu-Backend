@@ -10,16 +10,19 @@ import {
 export class Api_error extends Error {
   status_code: number;
   path: string;
+  data: any;
 
   constructor(
     message: string,
     status_code: number,
     path: string = "",
+    data?: any,
     stack?: string
   ) {
     super(message);
     this.status_code = status_code;
     this.path = path;
+    this.data = data;
     if (stack) {
       this.stack = stack;
     } else {
@@ -45,7 +48,10 @@ export const global_error_handler: ErrorRequestHandler = async (
   let message =
     error.message || "Something went wrong. Please try again later.";
   let errors = null;
+  let data = null;
   let path = req.originalUrl; // Capture the request path
+
+  console.log(error);
 
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     switch (error.code) {
@@ -128,6 +134,7 @@ export const global_error_handler: ErrorRequestHandler = async (
   } else if (error instanceof Api_error) {
     status_code = error.status_code;
     message = error.message;
+    data = error.data;
     if (error.path) {
       errors = [{ path: error.path, message }];
     }
@@ -140,6 +147,7 @@ export const global_error_handler: ErrorRequestHandler = async (
     success: false,
     message,
     ...(errors ? { errors } : {}),
+    ...(data ? { data } : {}),
     path,
     request_id: new Date().getTime(),
   });

@@ -22,7 +22,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
-    "zod": "^4.1.13"
+    "zod": "4.3.5"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
@@ -36,5 +36,5 @@
     "tsx": "^4.19.2",
     "typescript": "^5.8.2"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@1.22.19"
 }

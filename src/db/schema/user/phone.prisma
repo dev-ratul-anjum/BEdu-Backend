@@ -3,14 +3,10 @@ model Phone {
     aditional_info String?
     number         String  @unique
 
-    parent_id      String?
-    parent         Parent?     @relation(fields: [parent_id], references: [id])
-    teacher        Teacher?    @relation(fields: [teacher_id], references: [id])
-    teacher_id     String?
-    admin          Admin?      @relation(fields: [admin_id], references: [id])
-    admin_id       String?
-    super_admin    SuperAdmin? @relation(fields: [super_admin_id], references: [id])
-    super_admin_id String?
+    teacher    Teacher? @relation(fields: [teacher_id], references: [id])
+    teacher_id String?
+    admin      Admin?   @relation(fields: [admin_id], references: [id])
+    admin_id   String?
 
     @@map("phones")
 }

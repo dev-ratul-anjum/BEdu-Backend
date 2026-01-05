@@ -9,7 +9,7 @@ const class_router = Router();
 // Crate Academic Year
 class_router.post(
   "/create",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   validate_data(create_class_schema),
   class_controller.create_class
 );
@@ -17,14 +17,14 @@ class_router.post(
 // Get All Academic Years
 class_router.get(
   "/all",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   class_controller.all_class_list
 );
 
 // Update Academic Year
 class_router.patch(
   "/update/:class_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   validate_data(update_class_schema),
   class_controller.update_class
 );
@@ -32,7 +32,7 @@ class_router.patch(
 // Delete Academic Year
 class_router.delete(
   "/delete/:class_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   class_controller.delete_class
 );
 

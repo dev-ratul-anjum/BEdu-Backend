@@ -1,0 +1,15 @@
+model Guardian {
+    id String @id @default(uuid())
+
+    phone      String           @unique
+    relation   GuardianRelation
+    name       String
+    occupation String?
+}
+
+enum GuardianRelation {
+    FATHER
+    MOTHER
+    SISTER
+    BROTHER
+}

@@ -10,7 +10,7 @@ const seed_super_admin = async () => {
       data: {
         username: "1234",
         password: hashed_password,
-        role: "SUPER_ADMIN",
+        role: "ADMIN",
       },
     });
     console.log("Super admin seeded");

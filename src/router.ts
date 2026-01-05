@@ -10,6 +10,7 @@ import routine_entry_router from "./modules/routine_entry/routine_entry.routes.j
 import biometric_device_router from "./modules/biometric/biometric_device/biometric_device.router.js";
 import biometric_user_router from "./modules/biometric/biometric_user/biometric_user.router.js";
 import attendance_router from "./modules/biometric/attendance/attendance.router.js";
+import student_router from "./modules/user/student/student.router.js";
 
 const app_router = Router({ caseSensitive: true });
 
@@ -21,6 +22,7 @@ app_router.all("/health-check", async (_req, res) => {
 });
 
 app_router.use("/user", user_router);
+app_router.use("/student", student_router);
 app_router.use("/notice", notice_router);
 app_router.use("/routine-entry", routine_entry_router);
 app_router.use("/academic-year", academic_year_router);
