@@ -12,7 +12,7 @@ const routine_entry_router = Router();
 // Crate routine entry
 routine_entry_router.post(
   "/create",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   validate_data(create_routine_entry_schema),
   routine_entry_controller.create_routine_entry
 );
@@ -20,28 +20,28 @@ routine_entry_router.post(
 // Get section routine entries
 routine_entry_router.get(
   "/section/:section_id",
-  check_auth(["SUPER_ADMIN", "STUDENT"]),
+  check_auth(["ADMIN", "STUDENT"]),
   routine_entry_controller.get_section_routine_entries
 );
 
 // Get teacher routine entries
 routine_entry_router.get(
   "/teacher/teacher_id",
-  check_auth(["SUPER_ADMIN", "TEACHER"]),
+  check_auth(["ADMIN", "TEACHER"]),
   routine_entry_controller.get_teacher_routine_entries
 );
 
 // Get All routine entry
 routine_entry_router.get(
   "/all",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   routine_entry_controller.all_routine_entry_list
 );
 
 // Update routine entry
 routine_entry_router.patch(
   "/update/:routine_entry_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   validate_data(update_routine_entry_schema),
   routine_entry_controller.update_routine_entry
 );
@@ -49,7 +49,7 @@ routine_entry_router.patch(
 // Delete routine entry
 routine_entry_router.delete(
   "/delete/:routine_entry_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   routine_entry_controller.delete_routine_entry
 );
 

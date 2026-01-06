@@ -51,8 +51,6 @@ export const global_error_handler: ErrorRequestHandler = async (
   let data = null;
   let path = req.originalUrl; // Capture the request path
 
-  console.log(error);
-
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     switch (error.code) {
       case "P2002": // Unique constraint

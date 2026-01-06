@@ -12,7 +12,7 @@ const biometric_user_router = Router();
 // Crate Academic Year
 biometric_user_router.post(
   "/create",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(),
   validate_data(create_biometric_user_schema),
   biometric_user_controller.create_biometric_user
 );
@@ -20,14 +20,14 @@ biometric_user_router.post(
 // Get All Academic Years
 biometric_user_router.get(
   "/all",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(),
   biometric_user_controller.all_biometric_user_list
 );
 
 // Update Academic Year
 biometric_user_router.patch(
   "/update/:biometric_user_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(),
   validate_data(update_biometric_user_schema),
   biometric_user_controller.update_biometric_user
 );
@@ -35,7 +35,7 @@ biometric_user_router.patch(
 // Delete Academic Year
 biometric_user_router.delete(
   "/delete/:biometric_user_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(),
   biometric_user_controller.delete_biometric_user
 );
 

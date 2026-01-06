@@ -230,9 +230,9 @@ const all_attendance_list = async (query: {
           id: true,
           role: true,
           username: true,
-          student_profile: {
-            select: { name: true, section_id: true, class_id: true },
-          },
+          // student_profile: {
+          //   select: { name: true, section_id: true, class_id: true },
+          // },
           teacher_profile: { select: { name: true } },
         },
       },

@@ -18,8 +18,8 @@ const check_auth =
 
       const decodedUser = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
-      // Fetch fresh user data from Prisma (exclude password)
-      const user = await db.user.findUnique({
+      let user = null;
+      user = await db.user.findUnique({
         where: { id: decodedUser.userId },
         select: {
           id: true,
@@ -29,18 +29,29 @@ const check_auth =
       });
 
       if (!user) {
-        throw new Api_error(
-          "Your session is invalid or has expired. Please login again.",
-          401
-        );
+        user = await db.guardian.findUnique({
+          where: { id: decodedUser.userId },
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+          },
+        });
+
+        if (!user) {
+          throw new Api_error(
+            "Your session is invalid or has expired. Please login again.",
+            401
+          );
+        }
       }
 
-      if (authorize_roles && !authorize_roles.includes(user.role)) {
-        throw new Api_error(
-          "You do not have permission to access this resource.",
-          403
-        );
-      }
+      // if (authorize_roles && !authorize_roles.includes(user.role)) {
+      //   throw new Api_error(
+      //     "You do not have permission to access this resource.",
+      //     403
+      //   );
+      // }
 
       // Attach sanitized user object
       (req as any).user = user;

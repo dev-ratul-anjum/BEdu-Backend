@@ -10,7 +10,7 @@ const notice_router = Router();
 // Crate Notice
 notice_router.post(
   "/create",
-  check_auth(["SUPER_ADMIN", "ADMIN"]),
+  check_auth(["ADMIN", "ADMIN"]),
   validate_data(create_notice_schema),
   file_uploader.upload.array("files"),
   notice_controller.create_notice
@@ -21,7 +21,7 @@ notice_router.get("/all", notice_controller.all_notices_list);
 // Mark As Delete
 notice_router.patch(
   "/archive/:notice_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   notice_controller.archive_notice
 );
 

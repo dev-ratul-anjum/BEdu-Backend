@@ -12,7 +12,7 @@ const attendance_router = Router();
 // Crate Attendance
 attendance_router.post(
   "/create",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   validate_data(create_attendance_raw_schema),
   attendance_controller.create_attendance
 );
@@ -20,20 +20,20 @@ attendance_router.post(
 // Get All Attendance
 attendance_router.get(
   "/list",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   attendance_controller.all_attendance_list
 );
 // Get All Raw Attendance
 attendance_router.get(
   "/raw/list",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   attendance_controller.all_raw_attendance_list
 );
 
 // Update Attendance
 attendance_router.patch(
   "/update/:attendance_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   validate_data(update_attendance_daily_schema),
   attendance_controller.update_attendance
 );
@@ -41,7 +41,7 @@ attendance_router.patch(
 // Delete Attendance
 attendance_router.delete(
   "/delete/:attendance_id",
-  check_auth(["SUPER_ADMIN"]),
+  check_auth(["ADMIN"]),
   attendance_controller.delete_attendance
 );
 

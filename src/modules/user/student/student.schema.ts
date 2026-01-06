@@ -1,15 +1,8 @@
 import { GuardianRelation } from "$/db/generated/enums.js";
 import { z } from "zod";
+import { user_schema } from "../auth/auth.schema.js";
 
-const rawSchoolName = process.env.SCHOOL_NAME;
-if (!rawSchoolName) {
-  throw new Error("Environment variable SCHOOL_NAME is not defined.");
-}
-const SCHOOL_NAME = rawSchoolName.trim().toUpperCase();
-
-const usernamePattern = new RegExp(`^${SCHOOL_NAME}-\\d+$`);
-
-// Guardian schema
+// Guardian Schema
 export const guardian_schema = z.object({
   relation: z.enum(GuardianRelation, {
     error: "Relation must be one of: FATHER, MOTHER, OTHER",
@@ -19,22 +12,7 @@ export const guardian_schema = z.object({
   occupation: z.string().optional(),
 });
 
-const user_schema = z.object({
-  username: z
-    .string()
-    .min(1, "Username is required")
-    .regex(
-      usernamePattern,
-      `Username must follow the format: ${SCHOOL_NAME}-<number> (e.g. ${SCHOOL_NAME}-101)`
-    ),
-
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .regex(/[A-Za-z]/, "Password must contain at least one letter")
-    .regex(/\d/, "Password must contain at least one number"),
-});
-
+// Student Profile Schema
 const student_profile_schema = z.object({
   first_name: z.string().min(1, "Frist name is required"),
   last_name: z.string().min(1, "Last name is required"),
