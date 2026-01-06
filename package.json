@@ -3,6 +3,7 @@
   "main": "src/server.ts",
   "type": "module",
   "scripts": {
+    "prebuild": "npx prisma generate",
     "dev": "tsx watch src/server.ts",
     "build": "tsc && tsc-alias",
     "start": "node dist/server.js",
